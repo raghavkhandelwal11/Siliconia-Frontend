@@ -1,0 +1,6 @@
+.next
+node_modules
+package-lock.json
+lib/api/schema.d.ts
+lib/api/openapi.yaml
+next-env.d.ts
