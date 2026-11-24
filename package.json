@@ -1,0 +1,49 @@
+{
+  "name": "siliconia-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "api:sync": "node scripts/api-sync.mjs",
+    "api:gen": "openapi-typescript lib/api/openapi.yaml -o lib/api/schema.d.ts",
+    "api:check": "node scripts/api-check.mjs",
+    "check": "npm run lint && npm run typecheck && npm run format:check && npm run api:check && npm test"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.108.4",
+    "next": "^16.4.6",
+    "next-intl": "^4.16.0",
+    "openapi-fetch": "^0.17.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^8.0.0",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.13",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.3.0",
+    "eslint": "^9",
+    "eslint-config-next": "^16.4.6",
+    "jsdom": "^29.1.1",
+    "openapi-typescript": "^7.13.0",
+    "prettier": "^3.10.1",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "^5.1.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

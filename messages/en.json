@@ -1,0 +1,54 @@
+{
+  "app": {
+    "name": "Siliconics",
+    "tagline": "Popular and Made in India electronics, reviewed by creators you trust"
+  },
+  "shell": {
+    "skipToContent": "Skip to main content",
+    "testMode": "TEST MODE: this is a prototype. Payments, shipping and SMS are simulated and no real money moves.",
+    "testInbox": "Open the test inbox",
+    "search": "Search products",
+    "searchPlaceholder": "Search phones, laptops, tools…",
+    "categories": "Categories",
+    "cart": "Cart",
+    "wishlist": "Wishlist",
+    "notifications": "Notifications",
+    "signIn": "Sign in",
+    "home": "Home",
+    "account": "Account",
+    "mainNav": "Main",
+    "mobileNav": "Mobile navigation",
+    "footer": {
+      "forCreators": "For Content Creators",
+      "forPromoters": "For Promoters",
+      "help": "Help",
+      "legal": "Terms and privacy",
+      "grievance": "Grievance officer",
+      "copyright": "© {year} Siliconics. Prototype build."
+    }
+  },
+  "home": {
+    "title": "Welcome to Siliconics",
+    "intro": "The store is being built. This page checks that the web app can reach the API.",
+    "apiStatus": "API status",
+    "apiVersion": "Version {version}, mode {mode}"
+  },
+  "status": {
+    "ok": "Working",
+    "checking": "Checking",
+    "down": "Not reachable"
+  },
+  "comingSoon": {
+    "title": "{section} is coming in {milestone}",
+    "body": "This part of Siliconics is planned in the development plan and will appear here once it is built."
+  },
+  "sections": {
+    "signIn": "Sign in",
+    "cart": "Cart",
+    "account": "Your account",
+    "seller": "Seller portal",
+    "creator": "Creator portal",
+    "promoter": "Promoter portal",
+    "admin": "Admin console"
+  }
+}
