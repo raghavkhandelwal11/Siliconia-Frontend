@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Icon } from "@/components/ui/Icon";
+import { AccountMenu } from "@/components/auth/AccountMenu";
 
 // UI-GLB-01/02: logo, search, categories, wishlist, notifications, cart and
 // account. Counts and the bell's live updates arrive with M1–M2.
@@ -50,12 +51,7 @@ export function Header() {
           <Link href="/cart" className={iconLink} aria-label={t("shell.cart")}>
             <Icon name="cart" />
           </Link>
-          <Link
-            href="/auth/sign-in"
-            className="ml-1 hidden rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-ink sm:inline-block"
-          >
-            {t("shell.signIn")}
-          </Link>
+          <AccountMenu />
         </nav>
       </div>
     </header>
