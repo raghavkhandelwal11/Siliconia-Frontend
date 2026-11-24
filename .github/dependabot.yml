@@ -7,9 +7,21 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+    ignore:
+      # TypeScript 7 (the Go compiler) has no JavaScript API yet, and
+      # openapi-typescript needs it (peer typescript ^5). Revisit when it supports 7.
+      - dependency-name: typescript
+        versions: [">=7"]
+      # Node types follow the Node version we run (26); upgrade them together with Node.
+      - dependency-name: "@types/node"
+        update-types: [version-update:semver-major]
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: weekly }
   - package-ecosystem: docker
     directory: /
     schedule: { interval: weekly }
+    ignore:
+      # Change Node versions on purpose (CI, .nvmrc and the image together).
+      - dependency-name: node
+        update-types: [version-update:semver-major]
