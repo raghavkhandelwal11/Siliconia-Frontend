@@ -50,5 +50,104 @@
     "creator": "Creator portal",
     "promoter": "Promoter portal",
     "admin": "Admin console"
+  },
+  "roles": {
+    "BUYER": "Buyer",
+    "SELLER": "Seller",
+    "PROMOTER": "Promoter",
+    "CREATOR": "Creator",
+    "ADMIN": "Admin"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign in or create an account",
+      "adminTitle": "Admin sign-in",
+      "intro": "We will send a 6-digit code to your mobile number.",
+      "roleLabel": "I want to",
+      "roles": {
+        "BUYER": "Shop",
+        "SELLER": "Sell products",
+        "PROMOTER": "Promote products",
+        "CREATOR": "Review as a creator"
+      },
+      "roleHint": "Each account type is separate. To sell as well as shop, sign up as a seller with the same number.",
+      "phoneLabel": "Mobile number",
+      "phoneHint": "10-digit Indian mobile number",
+      "sendCode": "Send code",
+      "sending": "Sending…",
+      "codeSentTo": "We sent a code to {phone} for your {role} account.",
+      "changeNumber": "Change",
+      "codeLabel": "6-digit code",
+      "verify": "Verify and continue",
+      "verifying": "Checking…",
+      "resendIn": "You can ask for a new code in {seconds} s",
+      "resend": "Send a new code",
+      "testInboxHint": "TEST MODE: no real SMS is sent. The code is in the test inbox.",
+      "openTestInbox": "Open the test inbox",
+      "or": "or",
+      "google": "Continue with Google",
+      "adminLink": "Admin sign-in",
+      "notAdmin": "Not an admin? Sign in here"
+    },
+    "verifyPhone": {
+      "title": "Add your mobile number",
+      "intro": "Orders, delivery updates and payouts need a verified mobile number.",
+      "later": "Do this later"
+    },
+    "mfa": {
+      "title": "Admin verification",
+      "loading": "Checking your authenticator…",
+      "setupIntro": "Admin accounts need an authenticator app (such as Google Authenticator, Microsoft Authenticator or Aegis) in addition to the SMS code.",
+      "setup": "Set up the authenticator",
+      "setupKeyIntro": "Add Siliconics to your authenticator app with this setup key. This key is shown once.",
+      "keyLabel": "Setup key",
+      "openApp": "Open in an authenticator app on this device",
+      "verifyIntro": "Enter the 6-digit code your authenticator app shows now.",
+      "codeLabel": "Authenticator code",
+      "verify": "Verify"
+    },
+    "errors": {
+      "generic": "Something went wrong. Try again.",
+      "google": "Google sign-in did not finish. Try again or use your mobile number."
+    }
+  },
+  "menu": {
+    "signIn": "Sign in",
+    "finishSignIn": "Finish signing in",
+    "signedInAs": "{role} account",
+    "account": "Your account",
+    "dashboard": "Your dashboard",
+    "viewAs": "View as",
+    "signOut": "Sign out"
+  },
+  "guard": {
+    "loading": "Loading…",
+    "error": "We could not load your account. Refresh the page.",
+    "wrongRoleTitle": "This area is for another account type",
+    "wrongRole": "This area is for {needed} accounts. You are signed in with a {current} account.",
+    "signInAs": "Sign in as {role}"
+  },
+  "account": {
+    "title": "Your account",
+    "profile": "Profile",
+    "role": "Account type",
+    "phone": "Mobile number",
+    "phoneMissing": "Not added",
+    "phoneVerified": "Verified",
+    "addPhone": "Add and verify",
+    "name": "Name",
+    "email": "Email (optional)",
+    "save": "Save",
+    "saved": "Saved",
+    "sessions": "Signed-in devices",
+    "loading": "Loading…",
+    "unknownDevice": "Unknown device",
+    "lastUsed": "Last used {date}",
+    "thisDevice": "This device",
+    "signOutDevice": "Sign out",
+    "errors": {
+      "save": "Could not save. Try again.",
+      "revoke": "Could not sign out that device."
+    }
   }
 }

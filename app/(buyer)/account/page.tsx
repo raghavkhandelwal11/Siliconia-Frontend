@@ -1,5 +1,12 @@
-import { ComingSoon } from "@/components/system/ComingSoon";
+"use client";
+
+import { RoleGuard } from "@/components/auth/RoleGuard";
+import { AccountSettings } from "@/components/account/AccountSettings";
+import { useSession } from "@/lib/auth/session";
 
 export default function Page() {
-  return <ComingSoon section="account" milestone="M2" />;
+  const session = useSession();
+  return (
+    <RoleGuard>{session.data?.state === "signed-in" && <AccountSettings account={session.data.account} />}</RoleGuard>
+  );
 }
