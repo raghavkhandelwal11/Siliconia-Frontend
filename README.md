@@ -20,6 +20,9 @@ npm run dev            # http://localhost:3000, or http://localhost:8080 through
 
 ## Develop
 
+Use Node 22 (`.nvmrc`). If you change dependencies with a newer npm, refresh the lock file with npm 10 so CI's `npm ci` accepts it:
+`docker run --rm -v "$PWD":/app -w /app node:22-alpine npm install --package-lock-only`.
+
 ```bash
 npm run check          # lint, typecheck, format check, API type drift, unit tests
 npm run api:sync       # copy api/openapi.yaml from ../siliconia_backend and regenerate lib/api/schema.d.ts
