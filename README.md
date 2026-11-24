@@ -20,8 +20,8 @@ npm run dev            # http://localhost:3000, or http://localhost:8080 through
 
 ## Develop
 
-Use Node 22 (`.nvmrc`). If you change dependencies with a newer npm, refresh the lock file with npm 10 so CI's `npm ci` accepts it:
-`docker run --rm -v "$PWD":/app -w /app node:22-alpine npm install --package-lock-only`.
+Use Node 26 (`.nvmrc`), the same as CI and the Docker image. If you change dependencies on another Node version, refresh the lock file with Node 26's npm so CI's `npm ci` accepts it:
+`docker run --rm -v "$PWD":/app -w /app node:26-alpine npm install --package-lock-only`.
 
 ```bash
 npm run check          # lint, typecheck, format check, API type drift, unit tests
