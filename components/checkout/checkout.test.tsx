@@ -89,8 +89,13 @@ const order = (extra: Partial<Order> = {}): Order => ({
       storeName: "Volt Store",
       status: "PENDING_PAYMENT",
       subtotalPaise: 559800,
+      events: [],
+      canCancel: false,
+      hasInvoice: false,
       items: [
         {
+          id: "i1",
+          status: "ACTIVE",
           name: "Volt Cell",
           slug: "volt-cell",
           attrs: {},

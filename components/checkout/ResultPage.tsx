@@ -90,6 +90,11 @@ export function ResultPage() {
           </>
         )}
         <div className="flex flex-wrap justify-center gap-3 pt-2">
+          {o.status === "CONFIRMED" && (
+            <Link href={`/account/orders/${o.id}`} className={buttonClass("primary")}>
+              {t("viewOrder")}
+            </Link>
+          )}
           <Link href="/categories" className={buttonClass("secondary")}>
             {t("keepShopping")}
           </Link>

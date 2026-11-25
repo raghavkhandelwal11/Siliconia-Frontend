@@ -36,7 +36,7 @@ export function OrdersPage() {
           {list.data.map((o) => (
             <li key={o.id}>
               <Link
-                href={`/checkout/result?order=${o.id}`}
+                href={`/account/orders/${o.id}`}
                 className="card rise flex items-center gap-4 p-4 transition hover:border-brand/40"
               >
                 <span className="block size-14 shrink-0 overflow-hidden rounded-lg bg-bg">
