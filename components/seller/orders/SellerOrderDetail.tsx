@@ -147,6 +147,7 @@ export function SellerOrderDetail({ id }: { id: string }) {
             {o.canCancel && (
               <ReasonForm
                 label={t("cancel")}
+                prompt={t("cancelPrompt")}
                 confirm={t("confirmCancel")}
                 busy={act.cancel.isPending}
                 suggestions={[t("reasons.stock"), t("reasons.damaged"), t("reasons.address")]}

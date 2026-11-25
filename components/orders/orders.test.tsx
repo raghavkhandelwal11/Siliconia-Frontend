@@ -43,6 +43,7 @@ const order = (sub: Partial<Order["subOrders"][number]> = {}): Order => ({
         {
           id: "i1",
           status: "ACTIVE",
+          canReturn: false,
           name: "Volt Cell",
           slug: "volt-cell",
           attrs: { Colour: "Black" },
@@ -55,6 +56,7 @@ const order = (sub: Partial<Order["subOrders"][number]> = {}): Order => ({
       events: [{ status: "CONFIRMED", actor: "SYSTEM", note: "Payment received", at: "2026-11-25T10:01:00Z" }],
       canCancel: true,
       hasInvoice: false,
+      isReplacement: false,
       ...sub,
     },
   ],
@@ -87,6 +89,7 @@ describe("OrderDetail", () => {
           status: "SHIPPED",
           canCancel: false,
           hasInvoice: true,
+          isReplacement: false,
           events: [
             { status: "CONFIRMED", actor: "SYSTEM", at: "2026-11-25T10:01:00Z" },
             { status: "SHIPPED", actor: "SELLER", note: "AWB SX1", at: "2026-11-25T12:00:00Z" },

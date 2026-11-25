@@ -10,12 +10,14 @@ import { Alert, buttonClass } from "@/components/ui/Form";
 import { Icon } from "@/components/ui/Icon";
 import { StatusChip } from "@/components/ui/StatusChip";
 import { Tracking } from "@/components/shipping/Tracking";
+import { ReturnForm } from "@/components/support/ReturnForm";
 import { ReasonForm } from "./ReasonForm";
 import { Timeline } from "./Timeline";
 
 // UI-BUY-05: one order with each seller's part, tracking, history, cancel and invoice.
 export function OrderDetail({ id }: { id: string }) {
   const t = useTranslations("orders");
+  const tr = useTranslations("returns");
   const format = useFormatter();
   const order = useOrder(id);
   const cancel = useBuyerCancel(id);
@@ -65,6 +67,9 @@ export function OrderDetail({ id }: { id: string }) {
             <p className="flex items-center gap-2 font-semibold">
               <Icon name="store" size={16} className="text-brand" />
               {t("soldBy", { store: s.storeName })}
+              {s.isReplacement && (
+                <span className="rounded-full bg-brand-soft px-2 py-0.5 text-xs text-brand">{t("replacement")}</span>
+              )}
             </p>
             <StatusChip tone={statusTone[s.status] ?? "neutral"}>{t(`status.${s.status}`)}</StatusChip>
           </header>
@@ -78,7 +83,7 @@ export function OrderDetail({ id }: { id: string }) {
 
           <ul className="divide-y divide-line rounded-xl border border-line">
             {s.items.map((it) => (
-              <li key={it.id} className="flex items-center gap-3 p-3">
+              <li key={it.id} className="flex flex-wrap items-center gap-3 p-3">
                 <span className="block size-14 shrink-0 overflow-hidden rounded-lg bg-bg">
                   {it.coverUrl && (
                     // eslint-disable-next-line @next/next/no-img-element -- sized by the API
@@ -93,7 +98,19 @@ export function OrderDetail({ id }: { id: string }) {
                     {Object.values(it.attrs).join(" · ")} × {it.qty}
                   </span>
                 </span>
-                <span className="text-sm font-semibold">{rupees(it.lineTotalPaise)}</span>
+                <span className="text-right text-sm">
+                  <span className="block font-semibold">{s.isReplacement ? t("free") : rupees(it.lineTotalPaise)}</span>
+                  {it.return && (
+                    <Link href="/account/returns" className="block text-xs text-brand">
+                      {tr(`type.${it.return.type}`)}: {tr(`status.${it.return.status}`)}
+                    </Link>
+                  )}
+                </span>
+                {it.canReturn && (
+                  <span className="basis-full">
+                    <ReturnForm orderId={o.id} itemId={it.id} windowEnds={s.returnWindowEndsAt} />
+                  </span>
+                )}
               </li>
             ))}
           </ul>
@@ -128,6 +145,13 @@ export function OrderDetail({ id }: { id: string }) {
           </div>
         </section>
       ))}
+
+      <section className="card flex flex-wrap items-center justify-between gap-3 p-5 text-sm">
+        <span>{t("helpPrompt")}</span>
+        <Link href={`/account/issues/new?order=${o.id}`} className={buttonClass("secondary", "min-h-9 px-4")}>
+          {t("getHelp")}
+        </Link>
+      </section>
 
       <section className="card space-y-1 p-5 text-sm">
         <h2 className="font-semibold">{t("deliverTo")}</h2>
