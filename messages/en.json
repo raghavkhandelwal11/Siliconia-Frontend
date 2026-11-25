@@ -424,7 +424,8 @@
       "addProduct": "Add a product",
       "orders": "Orders",
       "returns": "Returns",
-      "programmes": "Creators and promoters"
+      "programmes": "Creators and promoters",
+      "payouts": "Payouts"
     }
   },
   "admin": {
@@ -1422,5 +1423,165 @@
     "poolSize": "Pool (Electrons)",
     "setPool": "Set pool",
     "settled": "settled"
+  },
+  "m5": {
+    "empty": "Nothing here yet.",
+    "overview": {
+      "ordersToday": "Orders today",
+      "approvals": "Approvals waiting",
+      "issues": "Open issues",
+      "overdue": "{count} overdue",
+      "returns": "Returns waiting",
+      "payouts": "Payout batches to review",
+      "health": "Health",
+      "incidents": "{count, plural, one {# incident} other {# incidents}} open",
+      "allGood": "All checks passing"
+    },
+    "nav": {
+      "label": "Admin sections",
+      "users": "Users",
+      "orders": "Orders and returns",
+      "payouts": "Payouts",
+      "settings": "Settings",
+      "audit": "Audit and reports",
+      "health": "Health"
+    },
+    "users": {
+      "title": "Users",
+      "search": "Name, phone or account ID",
+      "find": "Search",
+      "reason": "Reason for suspension",
+      "name": "Name",
+      "role": "Role",
+      "phone": "Phone",
+      "status": "Status",
+      "suspend": "Suspend",
+      "reactivate": "Reactivate",
+      "failed": "Couldn't change this account."
+    },
+    "orders": {
+      "title": "Orders and returns",
+      "search": "Order number or phone",
+      "csv": "Download CSV",
+      "number": "Number",
+      "placed": "Placed",
+      "status": "Status",
+      "pay": "Payment",
+      "amount": "Amount",
+      "buyer": "Buyer",
+      "returns": "Returns",
+      "order": "Order",
+      "product": "Product",
+      "type": "Type"
+    },
+    "payouts": {
+      "title": "Seller payouts",
+      "csv": "Download CSV",
+      "draft": "Draft this week's batch",
+      "help": "Each batch covers delivered orders whose return window has closed. Approve, then release to send the bank transfers. Failed transfers go into the next batch.",
+      "failed": "That didn't work.",
+      "week": "Week ending {date}",
+      "summary": "{count} payouts, {paid} paid, {failed} failed",
+      "show": "Show payouts",
+      "hide": "Hide payouts",
+      "approve": "Approve",
+      "release": "Release to bank",
+      "cancel": "Cancel batch",
+      "store": "Store",
+      "gross": "Gross",
+      "commission": "Commission",
+      "tds": "TDS",
+      "net": "Net",
+      "status": "Status",
+      "statement": "Statement"
+    },
+    "settings": {
+      "title": "Settings",
+      "config": "Configuration",
+      "save": "Save",
+      "saved": "Saved",
+      "badJson": "Enter valid JSON, for example 10 or \"text\".",
+      "failed": "Couldn't save.",
+      "categories": "Category commission and GST",
+      "categoriesHelp": "Percentages. Changes apply to new orders only. Leave commission empty to use the platform default.",
+      "commission": "Commission %",
+      "gst": "GST %",
+      "legal": "Legal documents",
+      "kind": "Document",
+      "docTitle": "Title",
+      "body": "Text (Markdown)",
+      "publish": "Publish new version",
+      "published": "Published. Accounts will be asked to accept the new version."
+    },
+    "audit": {
+      "title": "Audit and reports",
+      "reports": "Reports (CSV)",
+      "report": {
+        "orders": "Orders",
+        "payouts": "Payouts",
+        "audit": "Audit log"
+      },
+      "adjustments": "Electrons adjustments",
+      "adjustmentsHelp": "A different admin must apply each request. Use a negative amount to remove Electrons.",
+      "account": "Account ID",
+      "amount": "Electrons",
+      "reason": "Reason",
+      "request": "Request",
+      "status": "Status",
+      "apply": "Apply",
+      "reject": "Reject",
+      "failed": "That didn't work.",
+      "log": "Audit log",
+      "at": "When",
+      "actor": "Admin",
+      "action": "Action",
+      "target": "Target"
+    },
+    "health": {
+      "title": "Health",
+      "help": "Synthetic checks run every 5 minutes. Two failures in a row open an incident and alert admins.",
+      "check": "Check",
+      "last": "Last result",
+      "latency": "Avg latency (24 h)",
+      "uptime": "Uptime (30 days)",
+      "up": "Up",
+      "down": "Down",
+      "incidents": "Incidents (last 7 days)",
+      "opened": "Opened",
+      "state": "State",
+      "error": "Error",
+      "resolved": "Resolved",
+      "open": "Open",
+      "recon": "Payment reconciliation",
+      "day": "Day",
+      "kind": "Kind",
+      "ref": "Reference",
+      "detail": "Detail"
+    },
+    "sellerPayouts": {
+      "title": "Payouts",
+      "help": "Payouts go out weekly for delivered orders whose return window has closed, after commission and TDS (section 194-O).",
+      "loadError": "Couldn't load payouts.",
+      "status": {
+        "DRAFT": "Scheduled",
+        "PROCESSING": "Sending",
+        "PAID": "Paid",
+        "FAILED": "Failed",
+        "CANCELLED": "Cancelled"
+      },
+      "breakdown": "Sales {gross} − commission {commission} − TDS {tds}",
+      "bankRef": "Bank reference {ref}",
+      "failed": "Transfer failed: {reason}. It will be retried in the next weekly batch.",
+      "statement": "Download statement (CSV)",
+      "none": "No payouts yet. Your first one comes after a delivered order's return window closes."
+    },
+    "legal": {
+      "label": "Updated terms",
+      "updated": "We've updated our terms. Please read and accept to continue.",
+      "version": "version {version}",
+      "accept": "I accept",
+      "missing": "This document isn't available.",
+      "versionDate": "Version {version}, published {date}"
+    }
   }
 }

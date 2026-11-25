@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { api, unwrap } from "@/lib/api/client";
 import { Card } from "@/components/ui/Form";
 import { Icon } from "@/components/ui/Icon";
+import { AdminNav, AdminOverviewTiles } from "@/components/m5/Admin";
 
 // UI-ADM-01 (first piece): what needs an admin's attention.
 export function AdminHome() {
@@ -18,6 +19,8 @@ export function AdminHome() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">{t("title")}</h1>
+      <AdminNav />
+      <AdminOverviewTiles />
       <Card>
         <div className="flex items-center gap-3">
           <span className="icon-tile size-11" style={{ "--hue": 248 } as React.CSSProperties}>
