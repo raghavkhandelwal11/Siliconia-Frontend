@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState, type CSSProperties } from "react";
@@ -126,6 +127,9 @@ export function BuyBox({ product }: { product: ProductPage }) {
               </Link>
             );
           }
+          if (a.key === "buy_now" && a.enabled && variant) {
+            return <BuyNow key={a.key} variantId={variant.id} primary={i === 0} />;
+          }
           if (a.key === "add_to_cart" && a.enabled && variant) {
             return (
               <AddToCart key={a.key} variantId={variant.id} max={Math.min(10, lv?.available ?? 10)} primary={i === 0} />
@@ -184,6 +188,36 @@ function StockLine({ available, loading }: { available?: number; loading: boolea
       <span className="live-dot" />
       {t("inStock", { n: available })}
     </p>
+  );
+}
+
+/** Puts the variant in the cart (if it is not there yet) and opens checkout. */
+function BuyNow({ variantId, primary }: { variantId: string; primary: boolean }) {
+  const t = useTranslations("pdp.buy");
+  const router = useRouter();
+  const cart = useCart();
+  const setQty = useSetQty();
+  const have = qtyInCart(cart.data, variantId);
+  return (
+    <div>
+      <button
+        type="button"
+        disabled={setQty.isPending}
+        className={buttonClass(primary ? "primary" : "secondary", "w-full")}
+        onClick={() => {
+          if (have > 0) router.push("/checkout");
+          else setQty.mutate({ variantId, qty: 1 }, { onSuccess: () => router.push("/checkout") });
+        }}
+      >
+        <Icon name="bolt" size={18} />
+        {t("action.buy_now")}
+      </button>
+      {setQty.isError && (
+        <p className="mt-1.5 text-center text-xs text-danger">
+          {setQty.error instanceof ApiError ? setQty.error.message : t("addError")}
+        </p>
+      )}
+    </div>
   );
 }
 

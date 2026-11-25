@@ -7,7 +7,7 @@ import { useState } from "react";
 import { api, ApiError, unwrap, type Account } from "@/lib/api/client";
 import { formatPhone, sessionKey, type Session } from "@/lib/auth/session";
 import { StatusChip } from "@/components/ui/StatusChip";
-import { Alert, Button, Card, Field } from "@/components/ui/Form";
+import { Alert, Button, buttonClass, Card, Field } from "@/components/ui/Form";
 
 // UI-ACC-01: profile, mobile number and signed-in devices (FR-AUTH-07).
 export function AccountSettings({ account }: { account: Account }) {
@@ -38,6 +38,15 @@ export function AccountSettings({ account }: { account: Account }) {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">{t("title")}</h1>
+      {account.role === "BUYER" && (
+        <nav className="flex flex-wrap gap-2" aria-label={t("shortcuts")}>
+          {(["orders", "addresses", "wishlist"] as const).map((k) => (
+            <Link key={k} href={`/account/${k}`} className={buttonClass("secondary")}>
+              {t(`links.${k}`)}
+            </Link>
+          ))}
+        </nav>
+      )}
 
       <Card>
         <h2 className="text-lg font-semibold">{t("profile")}</h2>

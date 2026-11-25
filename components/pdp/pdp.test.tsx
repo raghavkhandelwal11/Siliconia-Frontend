@@ -1,8 +1,9 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { renderWithProviders } from "@/test/render";
 import { stubApi } from "@/test/fetch";
+import { nav } from "@/test/navigation";
 import { optionGroups, pickVariant, specText, type ProductPage } from "@/lib/pdp";
 import { BuyBox } from "./BuyBox";
 import { Gallery } from "./Gallery";
@@ -92,6 +93,48 @@ describe("BuyBox", () => {
     await user.click(screen.getByLabelText("Blue"));
     expect(screen.getByText("₹19,999")).toBeInTheDocument();
     expect(screen.getByText("Only 3 left")).toBeInTheDocument();
+  });
+
+  it("Buy now adds the variant and opens checkout", async () => {
+    const calls = stubApi([
+      live([
+        { key: "buy_now", enabled: true },
+        { key: "add_to_cart", enabled: true },
+      ]),
+      {
+        method: "GET",
+        path: "/cart",
+        body: {
+          groups: [],
+          itemCount: 0,
+          subtotalPaise: 0,
+          mrpTotalPaise: 0,
+          savingsPaise: 0,
+          electronsNonMember: 0,
+          electronsMember: 0,
+          canCheckout: false,
+        },
+      },
+      {
+        method: "PUT",
+        path: "/cart/items/v1",
+        body: {
+          groups: [],
+          itemCount: 1,
+          subtotalPaise: 0,
+          mrpTotalPaise: 0,
+          savingsPaise: 0,
+          electronsNonMember: 0,
+          electronsMember: 0,
+          canCheckout: true,
+        },
+      },
+    ]);
+    renderWithProviders(<BuyBox product={product} />);
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole("button", { name: "Buy now" }));
+    await waitFor(() => expect(nav.push).toHaveBeenCalledWith("/checkout"));
+    expect(calls.some((c) => c.method === "PUT" && c.url.endsWith("/cart/items/v1"))).toBe(true);
   });
 
   it("gives the product's seller an edit link", async () => {

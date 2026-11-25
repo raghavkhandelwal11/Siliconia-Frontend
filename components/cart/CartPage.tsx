@@ -114,10 +114,19 @@ export function CartPage() {
               </span>
             </p>
           )}
-          <Button className="w-full" disabled>
-            {t("checkout")}
-          </Button>
-          <p className="text-center text-xs text-muted">{c.canCheckout ? t("checkoutSoon") : t("fixProblems")}</p>
+          {c.canCheckout ? (
+            <Link href="/checkout" className={buttonClass("primary", "w-full")}>
+              {t("checkout")}
+              <Icon name="arrow" size={18} />
+            </Link>
+          ) : (
+            <>
+              <Button className="w-full" disabled>
+                {t("checkout")}
+              </Button>
+              <p className="text-center text-xs text-muted">{t("fixProblems")}</p>
+            </>
+          )}
         </aside>
       </div>
     </div>
