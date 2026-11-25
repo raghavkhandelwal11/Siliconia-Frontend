@@ -45,11 +45,15 @@ export function useDeleteAddress() {
   });
 }
 
-export function useQuote(addressId: string | undefined, payMethod: PayMethod) {
+/** What is being bought: the cart, a held launch claim, or launch units at the normal price. */
+export type Extras = { electrons?: number; launchClaimId?: string; launchId?: string; qty?: number };
+
+export function useQuote(addressId: string | undefined, payMethod: PayMethod, extras: Extras = {}) {
   return useQuery({
-    queryKey: ["quote", addressId ?? "", payMethod],
-    queryFn: async () => unwrap(await api.POST("/checkout/quote", { body: { addressId, payMethod } })),
+    queryKey: ["quote", addressId ?? "", payMethod, extras],
+    queryFn: async () => unwrap(await api.POST("/checkout/quote", { body: { addressId, payMethod, ...extras } })),
     staleTime: 0,
+    placeholderData: (prev) => prev,
   });
 }
 
@@ -61,11 +65,19 @@ export function newIdempotencyKey(): string {
 export function usePlaceOrder() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (v: { key: string; addressId: string; payMethod: PayMethod; quoteHash: string }) =>
+    mutationFn: async (v: { key: string; addressId: string; payMethod: PayMethod; quoteHash: string } & Extras) =>
       unwrap(
         await api.POST("/orders", {
           params: { header: { "Idempotency-Key": v.key } },
-          body: { addressId: v.addressId, payMethod: v.payMethod, quoteHash: v.quoteHash },
+          body: {
+            addressId: v.addressId,
+            payMethod: v.payMethod,
+            quoteHash: v.quoteHash,
+            electrons: v.electrons,
+            launchClaimId: v.launchClaimId,
+            launchId: v.launchId,
+            qty: v.qty,
+          },
         }),
       ),
     onSuccess: (order) => {
@@ -95,7 +107,9 @@ export async function restartPayment(id: string): Promise<string> {
 }
 
 const inr = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
-export const rupees = (p: number) => inr.format(Math.round(p / 100));
+const inrPaise = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", minimumFractionDigits: 2 });
+/** ₹1,099 for whole rupees, ₹219.80 when there are paise (never rounds money). */
+export const rupees = (p: number) => (p % 100 === 0 ? inr.format(p / 100) : inrPaise.format(p / 100));
 
 export function oneLine(a: Address): string {
   return [a.line1, a.line2, a.city, `${a.state} ${a.pincode}`].filter(Boolean).join(", ");

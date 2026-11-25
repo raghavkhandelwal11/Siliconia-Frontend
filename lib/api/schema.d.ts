@@ -1366,6 +1366,247 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/electrons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Electrons balance (1 Electron = ₹1) */
+        get: operations["getElectrons"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/electrons/ledger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Electrons history, newest first (50 per page) */
+        get: operations["getElectronsLedger"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/membership": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Electra Membership status */
+        get: operations["getMembership"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Turn auto-renew off (revokes the mandate) or back on (needs a mandate) */
+        patch: operations["setAutoRenew"];
+        trace?: never;
+    };
+    "/membership/purchase": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Buy or renew a year; Electrons pay first, the rest on the payment page */
+        post: operations["buyMembership"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/launches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Scheduled, live and past launch deals */
+        get: operations["listLaunches"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/launches/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A launch (with your claims and member status when signed in) */
+        get: operations["getLaunch"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/launches/{id}/stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Server-sent events: `live` with {status, dealRemaining, held, normalAvailable} on every change */
+        get: operations["streamLaunch"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/launches/{id}/reserve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Hold deal units for 10 minutes (members; Redis gate + conditional SQL, never oversells) */
+        post: operations["reserveLaunch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/launches/{id}/queue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Position, or an admission pass once admitted */
+        get: operations["launchQueueStatus"];
+        put?: never;
+        /** Join the waiting room */
+        post: operations["joinLaunchQueue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/launch-claims/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Give back a held claim */
+        delete: operations["releaseClaim"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/launches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** All launches including drafts */
+        get: operations["adminLaunches"];
+        put?: never;
+        /** Create a DRAFT launch (deal units computed, LLD 9.1) */
+        post: operations["createLaunch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/launches/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Deal-unit calculator */
+        post: operations["previewLaunch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/launches/{id}/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Book platform-owned launch stock and schedule */
+        post: operations["scheduleLaunch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/launches/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel a draft or scheduled launch */
+        post: operations["cancelLaunch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/webhooks/payment": {
         parameters: {
             query?: never;
@@ -1771,6 +2012,16 @@ export interface components {
             /** @enum {string} */
             viewer: "ANONYMOUS" | "BUYER" | "SELLER" | "PROMOTER" | "CREATOR" | "ADMIN";
             isMember: boolean;
+            launch?: {
+                /** Format: uuid */
+                id: string;
+                status: string;
+                /** Format: date-time */
+                startsAt: string;
+                /** Format: int64 */
+                dealPricePaise: number;
+                dealRemaining: number;
+            };
             actions: {
                 /** @enum {string} */
                 key: "buy_now" | "add_to_cart" | "wishlist" | "edit" | "promote" | "request_demo" | "add_review" | "hide";
@@ -1942,7 +2193,14 @@ export interface components {
              * @description Why cash on delivery is not offered
              * @enum {string}
              */
-            codReason?: "OVER_LIMIT" | "PIN_NO_COD";
+            codReason?: "NOT_MEMBER" | "LAUNCH_DEAL" | "OVER_LIMIT" | "PIN_NO_COD";
+            isMember: boolean;
+            electronsAvailable: number;
+            electronsMax: number;
+            electronsUsed: number;
+            electronsEarn: number;
+            electronsOnly: boolean;
+            launchDeal: boolean;
             delivery?: {
                 deliverable: boolean;
                 etaDays?: number;
@@ -2207,6 +2465,160 @@ export interface components {
             email: boolean;
             /** @description Launch alerts and offers (opt-in) */
             marketing: boolean;
+        };
+        ElectronsBalance: {
+            available: number;
+            /** @description Earned, waiting for the return window to close */
+            pending: number;
+            nextExpiry?: {
+                amount: number;
+                /** Format: date-time */
+                at: string;
+            };
+        };
+        LedgerEntry: {
+            /** Format: uuid */
+            id: string;
+            type: string;
+            amount: number;
+            refType: string;
+            /** Format: uuid */
+            refId: string;
+            note?: string;
+            /** Format: date-time */
+            at: string;
+        };
+        Membership: {
+            /** @enum {string} */
+            status: "NONE" | "ACTIVE" | "LAPSED";
+            isMember: boolean;
+            /** Format: date-time */
+            expiresAt?: string;
+            autoRenew: boolean;
+            hasMandate: boolean;
+            /** Format: date-time */
+            nextChargeAt?: string;
+            /** Format: int64 */
+            feePaise: number;
+            pending?: components["schemas"]["MembershipCheckout"];
+        };
+        MembershipCheckout: {
+            /** Format: uuid */
+            purchaseId: string;
+            checkoutUrl?: string;
+            /** @enum {string} */
+            status: "ACTIVE" | "PENDING_PAYMENT";
+        };
+        /** @enum {string} */
+        LaunchStatus: "DRAFT" | "SCHEDULED" | "LIVE" | "DEAL_SOLD_OUT" | "NORMAL_ON_SALE" | "COMPLETED" | "CANCELLED";
+        LaunchSummary: {
+            /** Format: uuid */
+            id: string;
+            productName: string;
+            productSlug: string;
+            coverUrl?: string;
+            status: components["schemas"]["LaunchStatus"];
+            /** Format: date-time */
+            startsAt: string;
+            /** Format: int64 */
+            dealPricePaise: number;
+            /** Format: int64 */
+            normalPricePaise: number;
+            dealUnits: number;
+            dealRemaining: number;
+        };
+        LaunchList: {
+            items: components["schemas"]["LaunchSummary"][];
+        };
+        LaunchClaim: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            launchId: string;
+            qty: number;
+            /** @enum {string} */
+            status: "HELD" | "ORDERED" | "PAID" | "RELEASED";
+            /** Format: date-time */
+            heldUntil: string;
+        };
+        Launch: {
+            /** Format: uuid */
+            id: string;
+            productName: string;
+            productSlug: string;
+            coverUrl?: string;
+            attrs: {
+                [key: string]: string;
+            };
+            status: components["schemas"]["LaunchStatus"];
+            /** Format: date-time */
+            startsAt: string;
+            /** Format: date-time */
+            normalSaleAt?: string;
+            /** Format: int64 */
+            mrpPaise: number;
+            /** Format: int64 */
+            normalPricePaise: number;
+            /** Format: int64 */
+            dealPricePaise: number;
+            dealDiscountBps: number;
+            dealUnits: number;
+            dealRemaining: number;
+            held: number;
+            normalAvailable: number;
+            perMemberLimit: number;
+            waitingRoom: boolean;
+            /** Format: date-time */
+            serverTime: string;
+            myClaims?: components["schemas"]["LaunchClaim"][];
+            isMember: boolean;
+        };
+        QueueState: {
+            position: number;
+            admitted: boolean;
+            admissionToken?: string;
+        };
+        LaunchDraft: {
+            /** Format: uuid */
+            productId: string;
+            /** Format: uuid */
+            variantId: string;
+            /**
+             * Format: uuid
+             * @description A platform seller account
+             */
+            sellerId: string;
+            unitsBought: number;
+            /** Format: int64 */
+            unitCostPaise: number;
+            /** Format: int64 */
+            normalPricePaise: number;
+            /** @description Default from config (8000) */
+            dealDiscountBps?: number;
+            /** @description Default from config (400) */
+            minProfitBps?: number;
+            perMemberLimit?: number;
+            /** Format: date-time */
+            startsAt: string;
+            /** @enum {string} */
+            normalSaleMode?: "IMMEDIATE" | "SCHEDULED";
+            /** Format: date-time */
+            normalSaleAt?: string;
+            waitingRoomRps?: number;
+        };
+        LaunchPreview: {
+            dealUnits: number;
+            /** Format: int64 */
+            dealPricePaise: number;
+            normalUnits: number;
+            /** Format: int64 */
+            revenuePaise: number;
+            /** Format: int64 */
+            costPaise: number;
+            /** Format: int64 */
+            profitPaise: number;
+            dealDiscountBps: number;
+            minProfitBps: number;
         };
     };
     responses: {
@@ -3826,6 +4238,18 @@ export interface operations {
                     addressId?: string;
                     /** @enum {string} */
                     payMethod?: "ONLINE" | "COD";
+                    electrons?: number;
+                    /**
+                     * Format: uuid
+                     * @description Buy held deal units instead of the cart
+                     */
+                    launchClaimId?: string;
+                    /**
+                     * Format: uuid
+                     * @description Buy launch stock at the normal price (with qty)
+                     */
+                    launchId?: string;
+                    qty?: number;
                 };
             };
         };
@@ -3884,6 +4308,12 @@ export interface operations {
                     /** @enum {string} */
                     payMethod: "ONLINE" | "COD";
                     quoteHash: string;
+                    electrons?: number;
+                    /** Format: uuid */
+                    launchClaimId?: string;
+                    /** Format: uuid */
+                    launchId?: string;
+                    qty?: number;
                 };
             };
         };
@@ -4645,6 +5075,413 @@ export interface operations {
                 };
             };
             400: components["responses"]["Error"];
+        };
+    };
+    getElectrons: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ElectronsBalance"];
+                };
+            };
+        };
+    };
+    getElectronsLedger: {
+        parameters: {
+            query?: {
+                before?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Entries */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: components["schemas"]["LedgerEntry"][];
+                    };
+                };
+            };
+        };
+    };
+    getMembership: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Membership"];
+                };
+            };
+        };
+    };
+    setAutoRenew: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    autoRenew: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Membership"];
+                };
+            };
+            409: components["responses"]["Error"];
+        };
+    };
+    buyMembership: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    electrons?: number;
+                    /** @default true */
+                    autoRenew?: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MembershipCheckout"];
+                };
+            };
+            400: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+        };
+    };
+    listLaunches: {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["LaunchStatus"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LaunchList"];
+                };
+            };
+        };
+    };
+    getLaunch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Launch"];
+                };
+            };
+            404: components["responses"]["Error"];
+        };
+    };
+    streamLaunch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Event stream */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": string;
+                };
+            };
+        };
+    };
+    reserveLaunch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    qty: number;
+                    admissionToken?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Held */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LaunchClaim"];
+                };
+            };
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            428: components["responses"]["Error"];
+            429: components["responses"]["Error"];
+        };
+    };
+    launchQueueStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QueueState"];
+                };
+            };
+            404: components["responses"]["Error"];
+        };
+    };
+    joinLaunchQueue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QueueState"];
+                };
+            };
+        };
+    };
+    releaseClaim: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Released */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            409: components["responses"]["Error"];
+        };
+    };
+    adminLaunches: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LaunchList"];
+                };
+            };
+        };
+    };
+    createLaunch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LaunchDraft"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id: string;
+                        dealUnits: number;
+                        /** Format: int64 */
+                        dealPricePaise: number;
+                        status: string;
+                    };
+                };
+            };
+            400: components["responses"]["Error"];
+            422: components["responses"]["Error"];
+        };
+    };
+    previewLaunch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LaunchDraft"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LaunchPreview"];
+                };
+            };
+            422: components["responses"]["Error"];
+        };
+    };
+    scheduleLaunch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Scheduled */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            409: components["responses"]["Error"];
+        };
+    };
+    cancelLaunch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Cancelled */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            409: components["responses"]["Error"];
         };
     };
     paymentWebhook: {

@@ -286,7 +286,9 @@
       "wishlist": "Wishlist",
       "returns": "Returns",
       "issues": "Help with an order",
-      "notifications": "Notifications"
+      "notifications": "Notifications",
+      "electrons": "Electrons",
+      "membership": "Electra Membership"
     }
   },
   "categories": {
@@ -432,7 +434,9 @@
       "loading": "Loading…",
       "open": "Open the queue",
       "support": "Support issues",
-      "supportBody": "Buyer issues waiting for a reply, oldest first."
+      "supportBody": "Buyer issues waiting for a reply, oldest first.",
+      "launches": "Launch deals",
+      "launchesBody": "Set up launches, check the deal units and schedule them."
     },
     "approvals": {
       "title": "Seller approvals",
@@ -735,7 +739,9 @@
       "addError": "Could not add to cart.",
       "maxInCart": "You have the most you can buy in your cart",
       "inCart": "{n} in your cart",
-      "saved": "Saved to wishlist"
+      "saved": "Saved to wishlist",
+      "launchLive": "Launch deal live: {price} for Electra Members",
+      "launchSoon": "Launch deal coming: {price} for Electra Members"
     }
   },
   "cart": {
@@ -857,7 +863,16 @@
     "loadError": "Could not load checkout. Refresh to try again.",
     "codPin": "Not available for this PIN code. Pay online instead.",
     "arrives": "Arrives by",
-    "notServed": "We don't deliver to this address yet. Choose or add another address."
+    "notServed": "We don't deliver to this address yet. Choose or add another address.",
+    "useElectrons": "Use Electrons",
+    "electronsHint": "You have {n} Electrons. Use up to {max} here (1 Electron = ₹1).",
+    "electronsLine": "Electrons",
+    "placeElectrons": "Place order with Electrons",
+    "codReason": {
+      "NOT_MEMBER": "For Electra Members. Join to pay on delivery.",
+      "LAUNCH_DEAL": "Not available for launch deals.",
+      "PIN_NO_COD": "Not available for this PIN code. Pay online instead."
+    }
   },
   "orderResult": {
     "missing": "No order was given.",
@@ -1147,5 +1162,117 @@
       "marketing": "Occasional deals and launch reminders. Off unless you choose it."
     },
     "prefsError": "Could not save your choices."
+  },
+  "electrons": {
+    "title": "Electrons",
+    "available": "Available",
+    "worth": "Worth ₹{n} off your orders",
+    "pending": "Pending",
+    "pendingHint": "Become available when the return window closes",
+    "nextExpiry": "Next expiry",
+    "expiresOn": "{n} expire on {date}",
+    "noExpiry": "Nothing expiring",
+    "spend": "Shop and spend",
+    "earnMore": "Earn 4× as a member",
+    "history": "History",
+    "empty": "No Electrons yet.",
+    "loadError": "Could not load your Electrons.",
+    "type": {
+      "EARN_PURCHASE": "Earned (pending)",
+      "MATURE": "Now available",
+      "SPEND_ORDER": "Spent on an order",
+      "SPEND_MEMBERSHIP": "Spent on membership",
+      "RESTORE": "Given back",
+      "REVERSAL": "Cancelled (item returned)",
+      "EXPIRY": "Expired",
+      "EARN_CREATOR_POOL": "Creator reward",
+      "EARN_PROMOTER": "Promoter reward",
+      "CASHOUT_HOLD": "Cash-out requested",
+      "CASHOUT_PAID": "Cashed out",
+      "CASHOUT_RELEASE": "Cash-out released",
+      "ADMIN_ADJUSTMENT": "Adjustment"
+    }
+  },
+  "membership": {
+    "title": "Electra Membership",
+    "price": "{amount} a year",
+    "loadError": "Could not load your membership.",
+    "error": "That didn't work. Try again.",
+    "benefit": {
+      "earn": "Earn 2% back in Electrons from ₹800 (4× the usual rate)",
+      "launch": "Buy launch deals at up to 80% off",
+      "cod": "Cash on delivery on orders up to ₹8,000",
+      "early": "Pay with money, Electrons, or both"
+    },
+    "confirming": "Confirming your payment… this page updates when it's done.",
+    "activeUntil": "You're a member until {date}",
+    "autoRenew": "Auto-renew",
+    "nextCharge": "We'll charge {amount} on {date}. You'll get a reminder 2 days before.",
+    "autoOff": "Off. Your benefits last until the end date.",
+    "renewEarly": "Renewing early adds a year to your current end date.",
+    "extend": "Add another year",
+    "join": "Join Electra",
+    "continuePayment": "Continue to payment",
+    "useElectrons": "Use {n} of up to {max} Electrons",
+    "autoRenewChoice": "Renew automatically each year (you can turn this off any time)",
+    "pay": "Pay {amount}"
+  },
+  "launch": {
+    "loadError": "Could not load this launch.",
+    "error": "That didn't work. Try again.",
+    "badge": "Launch deal · Electra Members",
+    "details": "Product details",
+    "off": "{pct}% off",
+    "unitsLeftLabel": "Deal units left",
+    "unitsLeft": "{left} of {total} deal units left",
+    "startsIn": "Starts in",
+    "held": "Reserved for you · {time} left to check out",
+    "checkout": "Check out now",
+    "signIn": "Sign in to buy",
+    "membersOnly": "Join Electra to buy this deal",
+    "inQueue": "You're in the waiting room · position {position}",
+    "joinQueue": "Join the waiting room",
+    "reserve": "Reserve at the deal price",
+    "allReserved": "All discounted units are reserved; some may free up in a few minutes.",
+    "allSold": "All items on discount were purchased",
+    "buyNormal": "Buy at {amount}",
+    "ended": "See the product",
+    "rules": "Limit {limit} per member. Reserved units are held for 10 minutes. No cash on delivery for launch deals.",
+    "listTitle": "Launch deals",
+    "none": "No launches right now. Check back soon.",
+    "startsOn": "Starts {date}",
+    "status": {
+      "SCHEDULED": "Coming soon",
+      "LIVE": "Live now",
+      "DEAL_SOLD_OUT": "Deal sold out",
+      "NORMAL_ON_SALE": "On sale",
+      "COMPLETED": "Ended",
+      "DRAFT": "Draft",
+      "CANCELLED": "Cancelled"
+    }
+  },
+  "adminLaunch": {
+    "title": "Launch deals",
+    "new": "New launch",
+    "productId": "Product ID",
+    "variantId": "Variant ID",
+    "sellerId": "Platform seller ID",
+    "sellerHint": "Launch stock is owned by a platform seller",
+    "units": "Units bought",
+    "cost": "Unit cost",
+    "normal": "Normal price",
+    "discount": "Deal discount %",
+    "profit": "Minimum profit %",
+    "limit": "Per-member limit",
+    "starts": "Starts at",
+    "rps": "Waiting room (members per second)",
+    "rpsHint": "Leave empty for no waiting room",
+    "preview": "{deal} units at {price}, {normal} at the normal price. Profit {profit}.",
+    "calculate": "Calculate deal units",
+    "create": "Create draft",
+    "schedule": "Schedule",
+    "cancel": "Cancel",
+    "dealUnits": "{left} of {n} deal units left",
+    "error": "That didn't work."
   }
 }

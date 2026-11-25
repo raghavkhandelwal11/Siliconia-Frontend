@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { ApiError } from "@/lib/api/client";
@@ -30,9 +30,16 @@ export function CheckoutPage() {
   const [chosen, setChosen] = useState<string>();
   const [adding, setAdding] = useState(false);
   const [method, setMethod] = useState<PayMethod>("ONLINE");
+  const params = useSearchParams();
+  const [electrons, setElectrons] = useState(0);
   const items = addresses.data?.items ?? [];
   const addressId = chosen ?? items.find((a) => a.isDefault)?.id ?? items[0]?.id;
-  const quote = useQuote(addressId, method);
+  const mode = {
+    launchClaimId: params.get("claim") ?? undefined,
+    launchId: params.get("launch") ?? undefined,
+    qty: params.get("qty") ? Number(params.get("qty")) : undefined,
+  };
+  const quote = useQuote(addressId, method, { ...mode, electrons });
   const place = usePlaceOrder();
   // One key per attempt: a double click or a retry after a network error
   // returns the same order instead of placing two.
@@ -65,7 +72,7 @@ export function CheckoutPage() {
   function submit() {
     if (!addressId) return;
     place.mutate(
-      { key: key.current, addressId, payMethod: method, quoteHash: q.quoteHash },
+      { key: key.current, addressId, payMethod: method, quoteHash: q.quoteHash, ...mode, electrons: q.electronsUsed },
       {
         onSuccess: (o) => {
           if (o.status === "PENDING_PAYMENT" && o.payment?.checkoutUrl) browser.go(o.payment.checkoutUrl);
@@ -161,9 +168,9 @@ export function CheckoutPage() {
                       <span className="font-semibold">{t(`method.${m}`)}</span>
                       <span className="block text-muted">
                         {off
-                          ? q.codReason === "PIN_NO_COD"
-                            ? t("codPin")
-                            : t("codLimit", { amount: rupees(q.codLimitPaise) })
+                          ? q.codReason === "OVER_LIMIT"
+                            ? t("codLimit", { amount: rupees(q.codLimitPaise) })
+                            : t(`codReason.${q.codReason ?? "PIN_NO_COD"}`)
                           : t(`methodHint.${m}`)}
                       </span>
                     </span>
@@ -172,6 +179,30 @@ export function CheckoutPage() {
               })}
             </fieldset>
           </Card>
+
+          {q.electronsAvailable > 0 && (
+            <Card>
+              <h2 className="mb-2 flex items-center gap-2 text-lg font-semibold">
+                <Icon name="coin" size={20} className="text-gold" /> {t("useElectrons")}
+              </h2>
+              <label htmlFor="electrons" className="text-sm text-muted">
+                {t("electronsHint", { n: q.electronsAvailable, max: q.electronsMax })}
+              </label>
+              <div className="mt-2 flex items-center gap-3">
+                <input
+                  id="electrons"
+                  type="range"
+                  min={0}
+                  max={q.electronsMax}
+                  step={1}
+                  value={Math.min(electrons, q.electronsMax)}
+                  onChange={(e) => setElectrons(Number(e.target.value))}
+                  className="w-full accent-[var(--color-gold)]"
+                />
+                <span className="w-24 text-right text-sm font-semibold">−{rupees(q.electronsUsed * 100)}</span>
+              </div>
+            </Card>
+          )}
 
           <Card>
             <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
@@ -235,15 +266,21 @@ export function CheckoutPage() {
                 <dd className="font-medium">{deliveryDate(q.delivery.etaDays)}</dd>
               </div>
             )}
+            {q.electronsUsed > 0 && (
+              <div className="flex justify-between text-gold">
+                <dt>{t("electronsLine")}</dt>
+                <dd>−{rupees(q.electronsUsed * 100)}</dd>
+              </div>
+            )}
             <div className="flex justify-between border-t border-line pt-2 text-base font-bold">
               <dt>{t("payable")}</dt>
               <dd>{rupees(q.payablePaise)}</dd>
             </div>
           </dl>
-          {q.electronsNonMember > 0 && (
+          {q.electronsEarn > 0 && (
             <p className="flex items-start gap-2 rounded-xl bg-gold-soft/70 p-3 text-sm">
               <Icon name="coin" size={18} className="mt-0.5 shrink-0 text-gold" />
-              {t("electrons", { n: q.electronsNonMember })}
+              {t("electrons", { n: q.electronsEarn })}
             </p>
           )}
           {q.delivery && !q.delivery.deliverable && <Alert>{t("notServed")}</Alert>}
@@ -264,9 +301,11 @@ export function CheckoutPage() {
             <Icon name={method === "COD" ? "check" : "shield"} size={18} />
             {place.isPending || place.isSuccess
               ? t("placing")
-              : method === "COD"
-                ? t("placeCod", { amount: rupees(q.payablePaise) })
-                : t("pay", { amount: rupees(q.payablePaise) })}
+              : q.electronsOnly
+                ? t("placeElectrons")
+                : method === "COD"
+                  ? t("placeCod", { amount: rupees(q.payablePaise) })
+                  : t("pay", { amount: rupees(q.payablePaise) })}
           </Button>
           {cartProblem && (
             <p className="text-center text-xs text-danger">

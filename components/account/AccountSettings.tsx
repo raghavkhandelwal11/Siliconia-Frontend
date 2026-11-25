@@ -40,11 +40,16 @@ export function AccountSettings({ account }: { account: Account }) {
       <h1 className="text-2xl font-bold">{t("title")}</h1>
       {account.role === "BUYER" && (
         <nav className="flex flex-wrap gap-2" aria-label={t("shortcuts")}>
-          {(["orders", "returns", "issues", "notifications", "addresses", "wishlist"] as const).map((k) => (
-            <Link key={k} href={`/account/${k}`} className={buttonClass("secondary")}>
-              {t(`links.${k}`)}
-            </Link>
-          ))}
+          {(["orders", "electrons", "returns", "issues", "notifications", "addresses", "wishlist"] as const).map(
+            (k) => (
+              <Link key={k} href={`/account/${k}`} className={buttonClass("secondary")}>
+                {t(`links.${k}`)}
+              </Link>
+            ),
+          )}
+          <Link href="/membership" className={buttonClass("secondary")}>
+            {t("links.membership")}
+          </Link>
         </nav>
       )}
 
