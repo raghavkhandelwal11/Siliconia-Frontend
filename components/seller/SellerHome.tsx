@@ -23,7 +23,10 @@ export function SellerHome() {
           <h2 className="text-lg font-semibold">{t("approvedTitle")}</h2>
           <p className="mt-1 text-muted">{t("approvedBody")}</p>
           <div className="mt-4 flex flex-wrap gap-3">
-            <Link href="/seller/products" className={buttonClass("primary")}>
+            <Link href="/seller/orders" className={buttonClass("primary")}>
+              {t("orders")}
+            </Link>
+            <Link href="/seller/products" className={buttonClass("secondary")}>
               {t("products")}
             </Link>
             <Link href="/seller/products/new" className={buttonClass("secondary")}>

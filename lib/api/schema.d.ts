@@ -995,6 +995,111 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/seller/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The seller's sub-orders, newest first, with counts per status (UI-SEL-05) */
+        get: operations["sellerOrders"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/orders/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One sub-order with address, items, history and allowed actions */
+        get: operations["sellerOrder"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/sub-orders/{id}/pack": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Mark a new sub-order as packed (CONFIRMED → PACKED) */
+        post: operations["packSubOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/sub-orders/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Seller cancels before shipping; stock returns and prepaid orders are refunded */
+        post: operations["sellerCancelSubOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sub-orders/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Buyer cancels one seller's part of an order before it ships */
+        post: operations["cancelSubOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/invoices/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * GST tax invoice for a shipped sub-order (buyer, seller or admin)
+         * @description The number comes from the seller's own series per financial year. Prototype invoices carry a "not a valid tax invoice" banner.
+         */
+        get: operations["getInvoice"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/webhooks/payment": {
         parameters: {
             query?: never;
@@ -1585,6 +1690,10 @@ export interface components {
             address?: components["schemas"]["DeliveryAddress"];
         };
         OrderItem: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "ACTIVE" | "CANCELLED" | "RETURNED" | "REPLACED";
             name: string;
             slug: string;
             coverUrl?: string;
@@ -1634,6 +1743,12 @@ export interface components {
                 deliveredAt?: string;
                 /** Format: date-time */
                 returnWindowEndsAt?: string;
+                events: components["schemas"]["TimelineEvent"][];
+                cancelReason?: string;
+                /** @enum {string} */
+                cancelledBy?: "BUYER" | "SELLER" | "ADMIN";
+                canCancel: boolean;
+                hasInvoice: boolean;
                 shipment?: {
                     awb: string;
                     courier: string;
@@ -1683,6 +1798,57 @@ export interface components {
             codAmountPaise: number;
             courier: string;
         };
+        TimelineEvent: {
+            status: string;
+            /** @enum {string} */
+            actor: "BUYER" | "SELLER" | "ADMIN" | "COURIER" | "SYSTEM";
+            note?: string;
+            /** Format: date-time */
+            at: string;
+        };
+        SellerOrder: {
+            /** Format: uuid */
+            id: string;
+            orderNumber: string;
+            status: string;
+            /** Format: date-time */
+            placedAt: string;
+            payMethod: string;
+            /** Format: int64 */
+            subtotalPaise: number;
+            itemCount: number;
+            buyerName: string;
+            city: string;
+            pincode: string;
+            awb?: string;
+            shipmentStatus?: string;
+            invoiceNo?: string;
+            /** Format: date-time */
+            deliveredAt?: string;
+        };
+        SellerOrderDetail: components["schemas"]["SellerOrder"] & {
+            address: components["schemas"]["DeliveryAddress"];
+            items: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                attrs: {
+                    [key: string]: string;
+                };
+                coverUrl?: string;
+                qty: number;
+                /** Format: int64 */
+                unitPricePaise: number;
+                /** Format: int64 */
+                lineTotalPaise: number;
+                status: string;
+            }[];
+            events: components["schemas"]["TimelineEvent"][];
+            cancelReason?: string;
+            canPack: boolean;
+            canShip: boolean;
+            canCancel: boolean;
+        };
     };
     responses: {
         /** @description Problem details (see code) */
@@ -1706,7 +1872,15 @@ export interface components {
         };
     };
     parameters: never;
-    requestBodies: never;
+    requestBodies: {
+        CancelReason: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+    };
     headers: never;
     pathItems: never;
 }
@@ -3529,6 +3703,150 @@ export interface operations {
                 };
                 content?: never;
             };
+        };
+    };
+    sellerOrders: {
+        parameters: {
+            query?: {
+                status?: "CONFIRMED" | "PACKED" | "SHIPPED" | "OUT_FOR_DELIVERY" | "DELIVERED" | "CANCELLED" | "RTO";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Orders */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: components["schemas"]["SellerOrder"][];
+                        counts: {
+                            [key: string]: number;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+        };
+    };
+    sellerOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The sub-order */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SellerOrderDetail"];
+                };
+            };
+            404: components["responses"]["Error"];
+        };
+    };
+    packSubOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Packed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+        };
+    };
+    sellerCancelSubOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["CancelReason"];
+        responses: {
+            /** @description Cancelled */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+        };
+    };
+    cancelSubOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["CancelReason"];
+        responses: {
+            /** @description Cancelled; a prepaid sub-order is refunded to the original method */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+        };
+    };
+    getInvoice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invoice */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                };
+            };
+            404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
         };
     };
     paymentWebhook: {
