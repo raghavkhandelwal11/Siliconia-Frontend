@@ -486,6 +486,136 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/media/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A stored product image (JPEG), cached for a year */
+        get: operations["getMedia"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/uploads/images": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload a product image (JPEG, PNG or WebP, up to 8 MB, at least 400 px)
+         * @description The API decodes the image, scales it to at most 1600 px and stores it as JPEG, dropping EXIF data. 60 uploads an hour.
+         */
+        post: operations["uploadProductImage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The seller's products, most recently changed first */
+        get: operations["listSellerProducts"];
+        put?: never;
+        /** Start a draft product in a sub-category (approved sellers only) */
+        post: operations["createProduct"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/products/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One product with variants, stock, images and what publishing still needs */
+        get: operations["getSellerProduct"];
+        /**
+         * Save details and specifications (specs are checked against the category)
+         * @description Send the version you loaded; a stale version gives 409 VERSION_CONFLICT. Invalid specs give 422 SPECS_INVALID with per-field messages.
+         */
+        put: operations["updateProduct"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/products/{id}/variants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replace the variant set with prices and stock
+         * @description Variants with reserved or sold units cannot be removed, and stock cannot go below them.
+         */
+        put: operations["saveVariants"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/products/{id}/images": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Set the image list in display order (the first is the cover) */
+        put: operations["saveImages"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/products/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Publish (ACTIVE), pause or resume a product */
+        post: operations["setProductStatus"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -623,6 +753,112 @@ export interface components {
             submittedAt?: string;
             /** Format: date-time */
             decidedAt?: string;
+        };
+        Upload: {
+            /** Format: uuid */
+            id: string;
+            url: string;
+            width: number;
+            height: number;
+        };
+        VariantInput: {
+            /**
+             * Format: uuid
+             * @description Omit for a new variant
+             */
+            id?: string;
+            sku: string;
+            /** @description Options such as Colour or Storage (up to 5) */
+            attrs?: {
+                [key: string]: string;
+            };
+            /** Format: int64 */
+            mrpPaise: number;
+            /** Format: int64 */
+            pricePaise: number;
+            stock: number;
+        };
+        Variant: {
+            /** Format: uuid */
+            id: string;
+            sku: string;
+            attrs: {
+                [key: string]: string;
+            };
+            /** Format: int64 */
+            mrpPaise: number;
+            /** Format: int64 */
+            pricePaise: number;
+            stock: number;
+            reserved: number;
+            sold: number;
+        };
+        ProductImage: {
+            /** Format: uuid */
+            uploadId: string;
+            url: string;
+            width: number;
+            height: number;
+            alt: string;
+        };
+        FieldError: {
+            key: string;
+            message: string;
+        };
+        ProductEditor: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            /** @enum {string} */
+            status: "DRAFT" | "ACTIVE" | "PAUSED" | "HIDDEN";
+            category: {
+                /** Format: uuid */
+                id: string;
+                slug: string;
+                name: string;
+                parentName?: string;
+                parentIcon?: string;
+            };
+            specSchema: components["schemas"]["SpecSchema"];
+            name: string;
+            brand: string;
+            model: string;
+            description: string;
+            warranty: string;
+            originCountry: string;
+            isLocal: boolean;
+            specs: {
+                [key: string]: unknown;
+            };
+            variants: components["schemas"]["Variant"][];
+            images: components["schemas"]["ProductImage"][];
+            /** @description What publishing still needs */
+            missing: ("brand" | "description" | "warranty" | "specs" | "variants" | "images")[];
+            specProblems: components["schemas"]["FieldError"][];
+            version: number;
+            /** Format: date-time */
+            updatedAt: string;
+            /** Format: date-time */
+            publishedAt?: string;
+        };
+        ProductSummary: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            name: string;
+            brand: string;
+            /** @enum {string} */
+            status: "DRAFT" | "ACTIVE" | "PAUSED" | "HIDDEN";
+            categoryName: string;
+            /** Format: int64 */
+            minPricePaise: number;
+            /** Format: int64 */
+            maxPricePaise: number;
+            variantCount: number;
+            available: number;
+            coverUrl?: string;
+            /** Format: date-time */
+            updatedAt: string;
         };
         Health: {
             /** @enum {string} */
@@ -1511,6 +1747,303 @@ export interface operations {
             403: components["responses"]["Error"];
             404: components["responses"]["Error"];
             409: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Storage key under products/, may contain slashes */
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The image */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/jpeg": string;
+                };
+            };
+            404: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    uploadProductImage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Upload"];
+                };
+            };
+            400: components["responses"]["Error"];
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            413: components["responses"]["Error"];
+            422: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+            503: components["responses"]["Error"];
+        };
+    };
+    listSellerProducts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Products */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        products: components["schemas"]["ProductSummary"][];
+                    };
+                };
+            };
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    createProduct: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    categoryId: string;
+                    name: string;
+                    brand?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductEditor"];
+                };
+            };
+            400: components["responses"]["Error"];
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getSellerProduct: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductEditor"];
+                };
+            };
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    updateProduct: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    categoryId: string;
+                    name: string;
+                    brand?: string;
+                    model?: string;
+                    description?: string;
+                    warranty?: string;
+                    originCountry?: string;
+                    isLocal?: boolean;
+                    specs?: {
+                        [key: string]: unknown;
+                    };
+                    version: number;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductEditor"];
+                };
+            };
+            400: components["responses"]["Error"];
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            422: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    saveVariants: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    variants: components["schemas"]["VariantInput"][];
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductEditor"];
+                };
+            };
+            400: components["responses"]["Error"];
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    saveImages: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    images: {
+                        /** Format: uuid */
+                        uploadId: string;
+                        alt?: string;
+                    }[];
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductEditor"];
+                };
+            };
+            400: components["responses"]["Error"];
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    setProductStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    status: "ACTIVE" | "PAUSED";
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductEditor"];
+                };
+            };
+            400: components["responses"]["Error"];
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            422: components["responses"]["Error"];
             429: components["responses"]["RateLimited"];
         };
     };

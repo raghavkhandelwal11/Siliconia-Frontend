@@ -398,7 +398,9 @@
       "continue": "Continue your application",
       "view": "View your application",
       "approvedTitle": "Your store is approved",
-      "approvedBody": "Adding products comes next. Your dashboard will show orders, returns and payouts."
+      "approvedBody": "Add products with photos, variants and stock, then publish them to the store.",
+      "products": "Your products",
+      "addProduct": "Add a product"
     }
   },
   "admin": {
@@ -452,6 +454,127 @@
       "reject": "Send back for changes",
       "decideError": "Could not save the decision.",
       "decided": "Decision saved. The seller has been told by SMS."
+    }
+  },
+  "products": {
+    "title": "Your products",
+    "subtitle": "Drafts, live products and paused ones, newest changes first.",
+    "add": "Add a product",
+    "loading": "Loading products",
+    "loadError": "We could not load your products. Refresh the page.",
+    "notApproved": "Your seller account must be approved before you add products.",
+    "toApplication": "Go to your application",
+    "emptyTitle": "No products yet",
+    "emptyBody": "Add your first product: pick a category, fill in the specifications, add photos and publish.",
+    "noPrice": "No price yet",
+    "stockLine": "{available} in stock · {variants, plural, =0 {no variants} one {# variant} other {# variants}}",
+    "status": {
+      "DRAFT": "Draft",
+      "ACTIVE": "Live",
+      "PAUSED": "Paused",
+      "HIDDEN": "Hidden by admin"
+    },
+    "new": {
+      "title": "Add a product",
+      "intro": "Choose where it belongs. The category decides which specifications buyers can filter by.",
+      "pickCategory": "1. Choose a category",
+      "pickSub": "2. Choose a sub-category in {category}",
+      "back": "All categories",
+      "change": "Change",
+      "name": "Product name",
+      "nameHint": "As buyers would search for it, e.g. Nova 5G (8 GB, 128 GB)",
+      "brand": "Brand",
+      "create": "Create draft",
+      "error": "Could not create the product."
+    },
+    "editor": {
+      "back": "All products",
+      "loadError": "We could not load this product.",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "saveError": "Could not save. Try again.",
+      "details": {
+        "title": "Details",
+        "name": "Product name",
+        "brand": "Brand",
+        "model": "Model number",
+        "description": "Description",
+        "descriptionLeft": "{n} more characters needed to publish",
+        "descriptionOk": "Looks good",
+        "warranty": "Warranty",
+        "warrantyHint": "e.g. 1 year manufacturer warranty",
+        "origin": "Country of origin",
+        "originHint": "2-letter code, e.g. IN",
+        "local": "Made in India",
+        "localHint": "Shown with the Local picks on the home page",
+        "save": "Save details"
+      },
+      "specs": {
+        "title": "Specifications",
+        "intro": "Fields for {category}. Starred ones are needed to publish; “Main” ones appear at the top of the product page.",
+        "main": "Main",
+        "choose": "Choose…",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "variants": {
+        "title": "Variants, prices and stock",
+        "intro": "Add a row for each version you sell. Add options such as Colour or Storage first.",
+        "addOption": "Add option",
+        "optionPlaceholder": "e.g. Colour",
+        "removeOption": "Remove option {option}",
+        "sku": "SKU",
+        "mrp": "MRP (₹)",
+        "price": "Price (₹)",
+        "stock": "Stock",
+        "remove": "Remove variant {sku}",
+        "inUse": "This variant has orders",
+        "add": "Add variant",
+        "save": "Save variants",
+        "off": "{pct}% off · sells at {price}",
+        "committed": "{n} units reserved or sold",
+        "badAmount": "Enter MRP and price as amounts in rupees"
+      },
+      "images": {
+        "title": "Photos",
+        "intro": "Up to 10. The first is the cover; use the arrows to reorder. JPEG, PNG or WebP, at least 400 px.",
+        "add": "Add photos",
+        "rules": "Drop or choose · up to 8 MB",
+        "cover": "Cover",
+        "moveLeft": "Move earlier",
+        "moveRight": "Move later",
+        "remove": "Remove photo",
+        "alt": "Photo description",
+        "altPlaceholder": "Describe the photo",
+        "imageN": "Photo {n}",
+        "uploading": "Uploading",
+        "full": "You already have 10 photos.",
+        "uploadError": "Upload failed"
+      },
+      "publish": {
+        "title": "Publish",
+        "progress": "Ready to publish",
+        "done": "done",
+        "todo": "to do",
+        "publish": "Publish product",
+        "resume": "Resume selling",
+        "pause": "Pause selling",
+        "error": "Could not change the status.",
+        "help": {
+          "DRAFT": "Buyers cannot see drafts. Finish the checklist to publish.",
+          "ACTIVE": "Live in the store. Pausing hides it until you resume.",
+          "PAUSED": "Paused: buyers cannot see it. Resume when ready.",
+          "HIDDEN": "An admin hid this product. Contact support."
+        },
+        "checks": {
+          "brand": "Brand",
+          "description": "Description (30+ characters)",
+          "warranty": "Warranty",
+          "specs": "Required specifications",
+          "variants": "At least one variant with price",
+          "images": "At least one photo"
+        }
+      }
     }
   }
 }
