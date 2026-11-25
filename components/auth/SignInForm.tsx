@@ -8,9 +8,11 @@ import { useState } from "react";
 import { api, ApiError, unwrap, type Account, type Role } from "@/lib/api/client";
 import { homeFor, safeNext, sessionKey, type Session } from "@/lib/auth/session";
 import { Alert, Button, Card, Field } from "@/components/ui/Form";
+import { Icon, type IconName } from "@/components/ui/Icon";
 import { useCountdown } from "./useCountdown";
 
 const SIGN_UP_ROLES: Role[] = ["BUYER", "SELLER", "PROMOTER", "CREATOR"];
+const ROLE_ICONS: Record<string, IconName> = { BUYER: "cart", SELLER: "store", PROMOTER: "rocket", CREATOR: "play" };
 
 /** Where to go after the code is accepted. */
 export function afterSignIn(account: Account, next: string | null): string {
@@ -84,7 +86,7 @@ export function SignInForm({ testMode = false }: { testMode?: boolean }) {
 
   const isAdmin = role === "ADMIN";
   return (
-    <Card className="mx-auto max-w-md">
+    <Card className="mx-auto w-full max-w-md">
       <h1 className="text-2xl font-bold">{isAdmin ? t("signIn.adminTitle") : t("signIn.title")}</h1>
       <p className="mt-1 text-muted">{t("signIn.intro")}</p>
 
@@ -103,9 +105,17 @@ export function SignInForm({ testMode = false }: { testMode?: boolean }) {
                 {SIGN_UP_ROLES.map((r) => (
                   <label
                     key={r}
-                    className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border px-3 text-sm ${role === r ? "border-accent bg-bg font-semibold" : "border-line"}`}
+                    className={`flex min-h-12 cursor-pointer items-center gap-2.5 rounded-xl border px-3 text-sm transition ${role === r ? "border-brand bg-brand-soft font-semibold text-brand shadow-card" : "border-line hover:border-brand/40"}`}
                   >
-                    <input type="radio" name="role" value={r} checked={role === r} onChange={() => setRole(r)} />
+                    <input
+                      type="radio"
+                      name="role"
+                      value={r}
+                      checked={role === r}
+                      onChange={() => setRole(r)}
+                      className="sr-only"
+                    />
+                    <Icon name={ROLE_ICONS[r]} size={18} />
                     {t(`signIn.roles.${r}`)}
                   </label>
                 ))}

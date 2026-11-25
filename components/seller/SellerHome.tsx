@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useSellerApplication } from "@/lib/seller";
-import { Alert, Card } from "@/components/ui/Form";
+import { Alert, buttonClass, Card } from "@/components/ui/Form";
 import { ApplicationStatus } from "./ApplicationStatus";
 
 // /seller: until approved, the portal is the application; afterwards it will
@@ -24,10 +24,7 @@ export function SellerHome() {
           <p className="mt-1 text-muted">{t("approvedBody")}</p>
         </Card>
       ) : (
-        <Link
-          href="/seller/onboarding"
-          className="inline-flex min-h-11 items-center rounded-full bg-brand px-5 text-sm font-semibold text-brand-ink"
-        >
+        <Link href="/seller/onboarding" className={buttonClass("primary")}>
           {a.editable ? t("continue") : t("view")}
         </Link>
       )}

@@ -55,7 +55,7 @@ export function VerifyPhoneForm() {
   }
 
   return (
-    <Card className="mx-auto max-w-md">
+    <Card className="mx-auto w-full max-w-md">
       <h1 className="text-2xl font-bold">{t("verifyPhone.title")}</h1>
       <p className="mt-1 text-muted">{t("verifyPhone.intro")}</p>
       {error && (

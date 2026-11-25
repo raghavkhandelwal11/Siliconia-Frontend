@@ -18,10 +18,10 @@ export function AppShell({ children, testMode }: { children: React.ReactNode; te
       </a>
       {testMode && <TestModeBanner />}
       <Header />
-      <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 pb-24 pt-6 md:pb-12">
+      <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 pb-24 pt-6 md:pb-12 md:pt-8">
         {children}
       </main>
-      <Footer />
+      <Footer testMode={testMode} />
       <BottomNav />
     </>
   );

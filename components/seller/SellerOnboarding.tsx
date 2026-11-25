@@ -14,6 +14,7 @@ import {
 } from "@/lib/seller";
 import { formatPhone } from "@/lib/auth/session";
 import { Alert, Button, Card, Field } from "@/components/ui/Form";
+import { Icon } from "@/components/ui/Icon";
 import { ApplicationStatus } from "./ApplicationStatus";
 import { KycResult } from "./KycResult";
 
@@ -108,23 +109,47 @@ function Wizard({ app, testMode }: { app: SellerApplication; testMode: boolean }
           </Link>
         </Alert>
       )}
-      <nav aria-label={t("stepsLabel")}>
-        <ol className="flex flex-wrap gap-2">
-          {STEPS.map((s, i) => (
-            <li key={s}>
-              <button
-                type="button"
-                onClick={() => setStep(s)}
-                aria-current={s === step ? "step" : undefined}
-                className={`min-h-10 rounded-full border px-3 text-sm ${s === step ? "border-accent bg-surface font-semibold" : "border-line text-muted"}`}
-              >
-                {i + 1}. {t(`steps.${s}`)}
-                {stepDone(app, s) && <span className="sr-only"> ({t("done")})</span>}
-                {stepDone(app, s) && <span aria-hidden="true"> ✓</span>}
-              </button>
-            </li>
-          ))}
-        </ol>
+      <nav aria-label={t("stepsLabel")} className="card p-4">
+        <div className="relative">
+          <div aria-hidden="true" className="absolute left-5 right-5 top-5 h-0.5 rounded-full bg-line">
+            <div
+              className="bg-brand-gradient h-full rounded-full transition-all duration-500"
+              style={{ width: `${(STEPS.filter((x) => stepDone(app, x)).length / (STEPS.length - 1)) * 100}%` }}
+            />
+          </div>
+          <ol className="relative grid grid-cols-5 gap-1">
+            {STEPS.map((s, i) => {
+              const done = stepDone(app, s);
+              const current = s === step;
+              return (
+                <li key={s} className="flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => setStep(s)}
+                    aria-current={current ? "step" : undefined}
+                    className="group flex flex-col items-center gap-1.5 text-center"
+                  >
+                    <span
+                      className={`flex size-10 items-center justify-center rounded-full border-2 text-sm font-bold transition ${
+                        current
+                          ? "bg-brand-gradient border-transparent text-white shadow-lift"
+                          : done
+                            ? "border-success bg-surface text-success"
+                            : "border-line bg-surface text-muted group-hover:border-brand/50"
+                      }`}
+                    >
+                      {done && !current ? <Icon name="check" size={18} /> : i + 1}
+                    </span>
+                    <span className={`hidden text-xs sm:block ${current ? "font-semibold text-ink" : "text-muted"}`}>
+                      {t(`steps.${s}`)}
+                    </span>
+                    {done && <span className="sr-only">({t("done")})</span>}
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </nav>
 
       <Card>
@@ -151,7 +176,7 @@ function Wizard({ app, testMode }: { app: SellerApplication; testMode: boolean }
               </label>
               <select
                 id={typeId}
-                className="mt-1 min-h-11 w-full rounded-lg border border-line bg-surface px-3"
+                className="mt-1.5 min-h-11 w-full rounded-xl border border-line bg-surface px-3 transition focus:border-brand"
                 value={form.businessType}
                 onChange={(e) => setForm({ ...form, businessType: e.target.value as BusinessType })}
                 required

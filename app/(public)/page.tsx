@@ -1,15 +1,23 @@
-import { useTranslations } from "next-intl";
-import { ApiStatus } from "@/components/system/ApiStatus";
+import { connection } from "next/server";
+import { Hero } from "@/components/home/Hero";
+import { Highlights } from "@/components/home/Highlights";
+import { CategoryStrip } from "@/components/home/CategoryStrip";
+import { SellBand } from "@/components/home/SellBand";
+import { TrustStrip } from "@/components/home/TrustStrip";
+import { fetchCategoryTree } from "@/lib/catalogue";
 
-export default function HomePage() {
-  const t = useTranslations("home");
+// UI-PUB-01/02, first version: product sections (products of the week, local
+// picks, trending) join in T1.8 once products exist.
+export default async function HomePage() {
+  await connection(); // per request; the category tree itself is cached for 5 minutes
+  const categories = await fetchCategoryTree();
   return (
-    <section className="rounded-2xl bg-surface p-8 shadow-sm">
-      <h1 className="text-3xl font-bold tracking-tight text-brand">{t("title")}</h1>
-      <p className="mt-2 max-w-prose text-muted">{t("intro")}</p>
-      <div className="mt-6">
-        <ApiStatus />
-      </div>
-    </section>
+    <div className="space-y-16">
+      <Hero />
+      <Highlights />
+      <CategoryStrip categories={categories} />
+      <SellBand />
+      <TrustStrip />
+    </div>
   );
 }

@@ -18,13 +18,15 @@ export function Field({ label, hint, error, prefix, className, ...input }: Field
       <label htmlFor={id} className="block text-sm font-medium">
         {label}
       </label>
-      <div className="mt-1 flex rounded-lg border border-line bg-surface focus-within:border-accent">
-        {prefix && <span className="flex items-center border-r border-line px-3 text-muted">{prefix}</span>}
+      <div className="mt-1.5 flex rounded-xl border border-line bg-surface transition focus-within:border-brand focus-within:shadow-[0_0_0_4px_color-mix(in_srgb,var(--color-brand)_14%,transparent)]">
+        {prefix && (
+          <span className="flex items-center border-r border-line px-3 text-sm font-medium text-muted">{prefix}</span>
+        )}
         <input
           id={id}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
-          className="min-h-11 w-full rounded-lg bg-transparent px-3 text-base outline-none"
+          className="min-h-11 w-full rounded-xl bg-transparent px-3 text-base outline-none placeholder:text-muted/70"
           {...input}
         />
       </div>
@@ -44,18 +46,20 @@ export function Field({ label, hint, error, prefix, className, ...input }: Field
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "secondary" | "ghost" };
 
+const buttonStyles = {
+  primary:
+    "bg-brand-gradient text-white shadow-[0_6px_20px_-6px_color-mix(in_srgb,var(--color-brand)_60%,transparent)] hover:brightness-110 hover:shadow-[0_10px_28px_-8px_color-mix(in_srgb,var(--color-brand)_70%,transparent)]",
+  secondary: "border border-line bg-surface hover:border-brand/40 hover:bg-brand-soft",
+  ghost: "text-brand hover:bg-brand-soft",
+};
+
+/** Class names for links styled as buttons. */
+export function buttonClass(variant: keyof typeof buttonStyles = "primary", extra = "") {
+  return `inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold transition duration-200 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-55 disabled:shadow-none disabled:hover:brightness-100 ${buttonStyles[variant]} ${extra}`;
+}
+
 export function Button({ variant = "primary", className = "", ...props }: ButtonProps) {
-  const styles = {
-    primary: "bg-brand text-brand-ink hover:opacity-90",
-    secondary: "border border-line bg-surface hover:bg-bg",
-    ghost: "text-accent hover:underline",
-  }[variant];
-  return (
-    <button
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-60 ${styles} ${className}`}
-      {...props}
-    />
-  );
+  return <button className={buttonClass(variant, className)} {...props} />;
 }
 
 export function Alert({ children, tone = "danger" }: { children: React.ReactNode; tone?: "danger" | "info" }) {
@@ -71,5 +75,5 @@ export function Alert({ children, tone = "danger" }: { children: React.ReactNode
 }
 
 export function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <section className={`rounded-2xl border border-line bg-surface p-6 ${className}`}>{children}</section>;
+  return <section className={`card rise p-6 ${className}`}>{children}</section>;
 }
