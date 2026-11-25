@@ -26,6 +26,9 @@ export function SellerHome() {
             <Link href="/seller/orders" className={buttonClass("primary")}>
               {t("orders")}
             </Link>
+            <Link href="/seller/programmes" className={buttonClass("secondary")}>
+              {t("programmes")}
+            </Link>
             <Link href="/seller/returns" className={buttonClass("secondary")}>
               {t("returns")}
             </Link>

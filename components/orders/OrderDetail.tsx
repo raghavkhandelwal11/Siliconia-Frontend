@@ -11,6 +11,8 @@ import { Icon } from "@/components/ui/Icon";
 import { StatusChip } from "@/components/ui/StatusChip";
 import { Tracking } from "@/components/shipping/Tracking";
 import { ReturnForm } from "@/components/support/ReturnForm";
+import { ReviewForm } from "@/components/m4/ReviewForm";
+import { useMyReviewedItems } from "@/lib/m4";
 import { ReasonForm } from "./ReasonForm";
 import { Timeline } from "./Timeline";
 
@@ -21,6 +23,7 @@ export function OrderDetail({ id }: { id: string }) {
   const format = useFormatter();
   const order = useOrder(id);
   const cancel = useBuyerCancel(id);
+  const reviewed = useMyReviewedItems();
 
   if (order.isPending) return <div className="skeleton h-96" />;
   if (order.isError || !order.data) return <Alert>{t("loadErrorOne")}</Alert>;
@@ -106,6 +109,13 @@ export function OrderDetail({ id }: { id: string }) {
                     </Link>
                   )}
                 </span>
+                {s.status === "DELIVERED" &&
+                  (it.status === "ACTIVE" || it.status === "REPLACED") &&
+                  !reviewed.data?.includes(it.id) && (
+                    <span className="basis-full">
+                      <ReviewForm itemId={it.id} />
+                    </span>
+                  )}
                 {it.canReturn && (
                   <span className="basis-full">
                     <ReturnForm orderId={o.id} itemId={it.id} windowEnds={s.returnWindowEndsAt} />

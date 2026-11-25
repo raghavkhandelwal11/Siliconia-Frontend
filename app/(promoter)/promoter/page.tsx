@@ -1,5 +1,12 @@
-import { ComingSoon } from "@/components/system/ComingSoon";
+"use client";
+
+import { Suspense } from "react";
+import { PromoterPortal } from "@/components/m4/Portals";
 
 export default function Page() {
-  return <ComingSoon section="promoter" milestone="M4" />;
+  return (
+    <Suspense>
+      <PromoterPortal />
+    </Suspense>
+  );
 }

@@ -6,6 +6,7 @@ import { CategoryStrip } from "@/components/home/CategoryStrip";
 import { SellBand } from "@/components/home/SellBand";
 import { TrustStrip } from "@/components/home/TrustStrip";
 import { ProductRail } from "@/components/listing/ProductRail";
+import { HomeRails } from "@/components/m4/CardRail";
 import { fetchCategoryTree } from "@/lib/catalogue";
 import { fetchListing } from "@/lib/search";
 
@@ -29,6 +30,7 @@ export default async function HomePage() {
     <div className="space-y-16">
       <Hero />
       <ProductRail eyebrow={t("popularEyebrow")} title={t("popular")} items={popular} href="/search?sort=popular" />
+      <HomeRails week={t("week")} forYou={t("forYou")} />
       <Highlights />
       <ProductRail eyebrow={t("localEyebrow")} title={t("local")} items={local} href="/search?local=true" />
       <CategoryStrip categories={categories} />
