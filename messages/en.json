@@ -163,5 +163,175 @@
     "filterBy": "You can filter by",
     "noProducts": "No products here yet",
     "noProductsBody": "Sellers are adding products to this category. Check back soon."
+  },
+  "seller": {
+    "title": "Seller application",
+    "loading": "Loading your application…",
+    "loadError": "We could not load your application. Refresh the page.",
+    "genericError": "Something went wrong. Try again.",
+    "stepsLabel": "Application steps",
+    "done": "done",
+    "saveContinue": "Save and continue",
+    "continue": "Continue",
+    "checking": "Checking…",
+    "phoneNeeded": "Verify your mobile number before you submit.",
+    "verifyPhone": "Verify mobile number",
+    "summary": "Your application",
+    "backToPortal": "Back to the seller portal",
+    "steps": {
+      "business": "Business details",
+      "pan": "PAN",
+      "bank": "Bank account",
+      "pickup": "Pickup address",
+      "review": "Review and submit"
+    },
+    "businessTypes": {
+      "INDIVIDUAL": "Individual",
+      "PROPRIETORSHIP": "Sole proprietorship",
+      "PARTNERSHIP": "Partnership",
+      "LLP": "LLP",
+      "PRIVATE_LIMITED": "Private limited company",
+      "PUBLIC_LIMITED": "Public limited company"
+    },
+    "business": {
+      "type": "Business type",
+      "choose": "Choose…",
+      "legalName": "Legal name",
+      "legalNameHint": "Exactly as on your PAN and bank account",
+      "storeName": "Store name",
+      "storeNameHint": "Shown to buyers on your products",
+      "gstin": "GSTIN",
+      "gstinOptional": "GSTIN (optional for individuals)",
+      "gstinShort": "GSTIN",
+      "gstinHint": "15 characters; it must be issued to your PAN"
+    },
+    "pan": {
+      "label": "PAN",
+      "intro": "We check the PAN against your legal name ({name}).",
+      "verify": "Verify PAN",
+      "testHint": "TEST MODE: any valid PAN passes; AAAAA0000A is not found."
+    },
+    "bank": {
+      "account": "Account number",
+      "ifsc": "IFSC",
+      "intro": "We send ₹1 to check the account is in your legal name ({name}). Payouts go here.",
+      "verify": "Verify account",
+      "testHint": "TEST MODE: accounts ending 0000 belong to someone else; 9999 are closed."
+    },
+    "pickup": {
+      "intro": "Couriers collect orders from here.",
+      "line1": "Address line 1",
+      "line2": "Address line 2 (optional)",
+      "city": "City",
+      "state": "State",
+      "pincode": "PIN code",
+      "phone": "Contact number"
+    },
+    "review": {
+      "missing": "Still to do:",
+      "ready": "Everything is ready to submit.",
+      "terms": "I agree to the Siliconics seller terms ({version}).",
+      "submit": "Submit for approval"
+    },
+    "missing": {
+      "phone": "verify your mobile number",
+      "business": "business details",
+      "pan": "verify PAN",
+      "gstin": "GSTIN",
+      "bank": "verify bank account",
+      "pickup": "pickup address"
+    },
+    "kyc": {
+      "verified": "Verified (ending {last4})",
+      "FAILED": "Not verified",
+      "NAME_MISMATCH": "Name does not match",
+      "VERIFIED": "Verified"
+    },
+    "status": {
+      "label": "Application status",
+      "DRAFT": "Not submitted",
+      "SUBMITTED": "In review",
+      "UNDER_REVIEW": "In review",
+      "APPROVED": "Approved",
+      "REJECTED": "Changes needed",
+      "SUSPENDED": "Suspended",
+      "submittedOn": "Submitted {date}",
+      "reason": "What to fix",
+      "stage": {
+        "DRAFT": "Fill in",
+        "SUBMITTED": "In review",
+        "DECIDED": "Decision"
+      },
+      "help": {
+        "DRAFT": "Complete every step, then submit. You can stop and come back at any time.",
+        "SUBMITTED": "Our team is checking your details. We will send you an SMS with the result.",
+        "UNDER_REVIEW": "Our team is checking your details. We will send you an SMS with the result.",
+        "APPROVED": "You can sell on Siliconics.",
+        "REJECTED": "Update your application and submit it again.",
+        "SUSPENDED": "Your seller account is suspended. Contact support."
+      }
+    },
+    "home": {
+      "title": "Seller portal",
+      "loading": "Loading…",
+      "loadError": "We could not load the seller portal. Refresh the page.",
+      "continue": "Continue your application",
+      "view": "View your application",
+      "approvedTitle": "Your store is approved",
+      "approvedBody": "Adding products comes next. Your dashboard will show orders, returns and payouts."
+    }
+  },
+  "admin": {
+    "home": {
+      "title": "Admin console",
+      "sellerApprovals": "Seller approvals",
+      "pending": "{count, plural, =0 {No applications waiting} one {# application waiting} other {# applications waiting}}",
+      "loading": "Loading…",
+      "open": "Open the queue"
+    },
+    "approvals": {
+      "title": "Seller approvals",
+      "filter": "Show",
+      "tabs": {
+        "pending": "Waiting",
+        "approved": "Approved",
+        "rejected": "Changes requested"
+      },
+      "loading": "Loading…",
+      "loadError": "Could not load applications.",
+      "empty": {
+        "pending": "No applications are waiting.",
+        "approved": "No approved sellers yet.",
+        "rejected": "No applications sent back."
+      },
+      "store": "Store",
+      "legal": "Legal name",
+      "checks": "Verified",
+      "submitted": "Submitted",
+      "bank": "Bank",
+      "unnamed": "(no store name)"
+    },
+    "review": {
+      "back": "Back to the queue",
+      "loading": "Loading…",
+      "loadError": "Could not load this application.",
+      "unnamed": "(no store name)",
+      "details": "Details",
+      "phone": "Mobile",
+      "checks": "Checks",
+      "bank": "Bank account",
+      "nameMatch": "Name match {pct}%",
+      "gstinMatches": "Issued to this PAN",
+      "gstinMismatch": "Not issued to this PAN",
+      "gstinMissing": "Missing",
+      "gstinNotNeeded": "Not needed (individual)",
+      "decision": "Decision",
+      "reasonLabel": "Note to the seller",
+      "reasonHint": "Required to send back for changes (at least 10 characters). The seller gets it by SMS.",
+      "approve": "Approve",
+      "reject": "Send back for changes",
+      "decideError": "Could not save the decision.",
+      "decided": "Decision saved. The seller has been told by SMS."
+    }
   }
 }

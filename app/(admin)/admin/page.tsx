@@ -1,5 +1,5 @@
-import { ComingSoon } from "@/components/system/ComingSoon";
+import { AdminHome } from "@/components/admin/AdminHome";
 
 export default function Page() {
-  return <ComingSoon section="admin" milestone="M5" />;
+  return <AdminHome />;
 }

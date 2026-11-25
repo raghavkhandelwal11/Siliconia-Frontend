@@ -1,5 +1,5 @@
-import { ComingSoon } from "@/components/system/ComingSoon";
+import { SellerHome } from "@/components/seller/SellerHome";
 
 export default function Page() {
-  return <ComingSoon section="seller" milestone="M1" />;
+  return <SellerHome />;
 }
