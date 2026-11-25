@@ -710,6 +710,97 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/cart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The cart, grouped by seller, with stock and price warnings (UI-BUY-01)
+         * @description Guests are identified by the sx_dev cookie, set on their first cart write together with sx_csrf.
+         *     When a signed-in buyer still has a guest cart on this device, it is merged first and `merged` says so.
+         */
+        get: operations["getCart"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/cart/merge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Merge this device's guest cart into the buyer's cart (also done by GET /cart) */
+        post: operations["mergeCart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/cart/items/{variantId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Set a line's quantity (1–10, capped by stock; 0 removes it) */
+        put: operations["setCartItem"];
+        post?: never;
+        /** Remove a line */
+        delete: operations["removeCartItem"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/wishlist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Saved products with price-drop and stock state (UI-BUY-10) */
+        get: operations["getWishlist"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/wishlist/{variantId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Save a variant (buyers) */
+        put: operations["saveToWishlist"];
+        post?: never;
+        /** Remove a saved variant */
+        delete: operations["removeFromWishlist"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1075,6 +1166,8 @@ export interface components {
             updatedAt: string;
         };
         ProductLive: {
+            /** @description Variants in the buyer's wishlist */
+            saved: string[];
             variants: {
                 /** Format: uuid */
                 id: string;
@@ -1099,6 +1192,77 @@ export interface components {
                 reason?: "SIGN_IN" | "COMING_M2" | "COMING_M3" | "COMING_M4" | "COMING_M5" | "OUT_OF_STOCK" | "OTHER_ROLE";
                 href?: string;
             }[];
+        };
+        CartLine: {
+            /** Format: uuid */
+            variantId: string;
+            /** Format: uuid */
+            productId: string;
+            slug: string;
+            name: string;
+            brand: string;
+            attrs: {
+                [key: string]: string;
+            };
+            coverUrl?: string;
+            qty: number;
+            /** Format: int64 */
+            pricePaise: number;
+            /** Format: int64 */
+            mrpPaise: number;
+            /** Format: int64 */
+            priceAtAddPaise: number;
+            available: number;
+            /** @enum {string} */
+            problem?: "UNAVAILABLE" | "OUT_OF_STOCK" | "LOW_STOCK";
+        };
+        Cart: {
+            groups: {
+                storeName: string;
+                lines: components["schemas"]["CartLine"][];
+                /** Format: int64 */
+                subtotalPaise: number;
+            }[];
+            itemCount: number;
+            /** Format: int64 */
+            subtotalPaise: number;
+            /** Format: int64 */
+            mrpTotalPaise: number;
+            /** Format: int64 */
+            savingsPaise: number;
+            /** Format: int64 */
+            electronsNonMember: number;
+            /** Format: int64 */
+            electronsMember: number;
+            /** @description False while any line has a problem */
+            canCheckout: boolean;
+            merged?: {
+                lines: number;
+                /** @description Some quantities were reduced or lines dropped */
+                adjusted: boolean;
+            };
+        };
+        WishItem: {
+            /** Format: uuid */
+            variantId: string;
+            slug: string;
+            name: string;
+            brand: string;
+            attrs: {
+                [key: string]: string;
+            };
+            coverUrl?: string;
+            /** Format: int64 */
+            pricePaise: number;
+            /** Format: int64 */
+            mrpPaise: number;
+            /** Format: int64 */
+            priceAtAddPaise: number;
+            priceDropped: boolean;
+            inStock: boolean;
+            buyable: boolean;
+            /** Format: date-time */
+            addedAt: string;
         };
         Health: {
             /** @enum {string} */
@@ -2426,6 +2590,184 @@ export interface operations {
                     };
                 };
             };
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getCart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The cart */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Cart"];
+                };
+            };
+            400: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    mergeCart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The cart */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Cart"];
+                };
+            };
+            400: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    setCartItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                variantId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    qty: number;
+                };
+            };
+        };
+        responses: {
+            /** @description The cart */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Cart"];
+                };
+            };
+            400: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    removeCartItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                variantId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The cart */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Cart"];
+                };
+            };
+            400: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getWishlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Wishlist */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: components["schemas"]["WishItem"][];
+                    };
+                };
+            };
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    saveToWishlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                variantId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Saved */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    removeFromWishlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                variantId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Removed */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
             429: components["responses"]["RateLimited"];
         };
     };

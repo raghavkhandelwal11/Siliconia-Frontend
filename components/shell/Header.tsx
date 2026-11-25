@@ -6,6 +6,7 @@ import { CategoryMenu } from "@/components/catalogue/CategoryMenu";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 import { SearchBox } from "@/components/listing/SearchBox";
+import { CartButton } from "@/components/cart/CartButton";
 
 // UI-GLB-01/02: logo, categories, search, theme, wishlist, notifications, cart
 // and account. Sticky frosted glass so content scrolls softly underneath.
@@ -35,9 +36,7 @@ export function Header() {
           >
             <Icon name="bell" />
           </Link>
-          <Link href="/cart" className={`${iconLink} inline-flex`} aria-label={t("shell.cart")}>
-            <Icon name="cart" />
-          </Link>
+          <CartButton />
           <AccountMenu />
         </nav>
       </div>
