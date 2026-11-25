@@ -40,7 +40,8 @@
       "light": "light",
       "dark": "dark"
     },
-    "cartCount": "Cart, {n, plural, one {# item} other {# items}}"
+    "cartCount": "Cart, {n, plural, one {# item} other {# items}}",
+    "notificationsCount": "Notifications, {n} unread"
   },
   "home": {
     "apiStatus": "API status",
@@ -284,7 +285,8 @@
       "addresses": "Saved addresses",
       "wishlist": "Wishlist",
       "returns": "Returns",
-      "issues": "Help with an order"
+      "issues": "Help with an order",
+      "notifications": "Notifications"
     }
   },
   "categories": {
@@ -1125,5 +1127,25 @@
       "RESOLVED": "Resolved",
       "CLOSED": "Closed"
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAll": "Mark all as read",
+    "empty": "Nothing yet. Order updates will appear here.",
+    "loadError": "Could not load notifications.",
+    "unread": "unread",
+    "prefsTitle": "How we reach you",
+    "alwaysOn": "Order updates always appear here and by SMS to your verified number.",
+    "pref": {
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "marketing": "Offers and launch alerts"
+    },
+    "prefHint": {
+      "whatsapp": "Order and return updates on WhatsApp.",
+      "email": "Order summaries and receipts (needs an email on your profile).",
+      "marketing": "Occasional deals and launch reminders. Off unless you choose it."
+    },
+    "prefsError": "Could not save your choices."
   }
 }
