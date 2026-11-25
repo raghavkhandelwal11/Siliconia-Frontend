@@ -1,5 +1,8 @@
-import { ComingSoon } from "@/components/system/ComingSoon";
+import type { Metadata } from "next";
+import { CartPage } from "@/components/cart/CartPage";
+
+export const metadata: Metadata = { title: "Your cart" };
 
 export default function Page() {
-  return <ComingSoon section="cart" milestone="M2" />;
+  return <CartPage />;
 }

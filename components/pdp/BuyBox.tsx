@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState, type CSSProperties } from "react";
-import { api, unwrap } from "@/lib/api/client";
+import { api, ApiError, unwrap } from "@/lib/api/client";
+import { qtyInCart, setSaved, useCart, useSetQty, wishlistKey } from "@/lib/cart";
 import { optionGroups, pickVariant, type ProductPage } from "@/lib/pdp";
 import { buttonClass } from "@/components/ui/Form";
 import { Icon, type IconName } from "@/components/ui/Icon";
@@ -115,27 +116,41 @@ export function BuyBox({ product }: { product: ProductPage }) {
 
       <div className="space-y-2">
         {live.isPending && <div className="skeleton h-12" />}
-        {live.data?.actions.map((a, i) =>
-          a.enabled && a.href ? (
-            <Link key={a.key} href={a.href} className={buttonClass(i === 0 ? "primary" : "secondary", "w-full")}>
-              <Icon name={ACTION_ICON[a.key] ?? "arrow"} size={18} />
-              {t(`action.${a.key}`)}
-            </Link>
-          ) : (
+        {live.data?.actions.map((a, i) => {
+          const style = i === 0 ? "primary" : "secondary";
+          if (a.enabled && a.href) {
+            return (
+              <Link key={a.key} href={a.href} className={buttonClass(style, "w-full")}>
+                <Icon name={ACTION_ICON[a.key] ?? "arrow"} size={18} />
+                {t(`action.${a.key}`)}
+              </Link>
+            );
+          }
+          if (a.key === "add_to_cart" && a.enabled && variant) {
+            return (
+              <AddToCart key={a.key} variantId={variant.id} max={Math.min(10, lv?.available ?? 10)} primary={i === 0} />
+            );
+          }
+          if (a.key === "wishlist" && a.enabled && variant) {
+            return (
+              <WishlistToggle
+                key={`${a.key}-${variant.id}`}
+                variantId={variant.id}
+                initial={live.data?.saved.includes(variant.id) ?? false}
+              />
+            );
+          }
+          return (
             <div key={a.key}>
-              <button
-                type="button"
-                disabled={!a.enabled}
-                className={buttonClass(i === 0 ? "primary" : "secondary", "w-full")}
-              >
+              <button type="button" disabled={!a.enabled} className={buttonClass(style, "w-full")}>
                 <Icon name={ACTION_ICON[a.key] ?? "arrow"} size={18} />
                 {t(`action.${a.key}`)}
               </button>
-              {a.reason && i === 0 && (
+              {a.reason && (i === 0 || a.reason === "SIGN_IN") && (
                 <p className="mt-1.5 text-center text-xs text-muted">
                   {a.reason === "SIGN_IN" ? (
                     <Link href={`/auth/sign-in?next=/p/${product.slug}`} className="font-semibold text-brand">
-                      {t("reason.SIGN_IN")}
+                      {t(a.key === "wishlist" ? "reason.SIGN_IN_SAVE" : "reason.SIGN_IN")}
                     </Link>
                   ) : (
                     t(`reason.${a.reason}`)
@@ -143,8 +158,8 @@ export function BuyBox({ product }: { product: ProductPage }) {
                 </p>
               )}
             </div>
-          ),
-        )}
+          );
+        })}
       </div>
 
       <ul className="grid gap-2 text-sm sm:grid-cols-2">
@@ -169,5 +184,84 @@ function StockLine({ available, loading }: { available?: number; loading: boolea
       <span className="live-dot" />
       {t("inStock", { n: available })}
     </p>
+  );
+}
+
+/** Adds one more of the variant (up to stock and 10) and confirms it. */
+function AddToCart({ variantId, max, primary }: { variantId: string; max: number; primary: boolean }) {
+  const t = useTranslations("pdp.buy");
+  const cart = useCart();
+  const setQty = useSetQty();
+  const [added, setAdded] = useState(false);
+  const have = qtyInCart(cart.data, variantId);
+  const full = have >= max;
+  return (
+    <div>
+      <button
+        type="button"
+        disabled={setQty.isPending || full}
+        className={buttonClass(primary ? "primary" : "secondary", "w-full")}
+        onClick={() =>
+          setQty.mutate(
+            { variantId, qty: have + 1 },
+            {
+              onSuccess: () => {
+                setAdded(true);
+                setTimeout(() => setAdded(false), 4000);
+              },
+            },
+          )
+        }
+      >
+        <Icon name="cart" size={18} />
+        {setQty.isPending ? t("adding") : have > 0 ? t("addAnother") : t("action.add_to_cart")}
+      </button>
+      <div aria-live="polite" className="mt-1.5 min-h-5 text-center text-xs">
+        {setQty.isError ? (
+          <span className="text-danger">{setQty.error instanceof ApiError ? setQty.error.message : t("addError")}</span>
+        ) : added ? (
+          <span className="pop inline-flex items-center gap-1 font-semibold text-success">
+            <Icon name="check" size={14} />
+            {t("added", { n: have })}{" "}
+            <Link href="/cart" className="text-brand underline">
+              {t("viewCart")}
+            </Link>
+          </span>
+        ) : full ? (
+          <span className="text-muted">{t("maxInCart")}</span>
+        ) : have > 0 ? (
+          <span className="text-muted">{t("inCart", { n: have })}</span>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+/** Heart button that saves the variant to the wishlist. */
+function WishlistToggle({ variantId, initial }: { variantId: string; initial: boolean }) {
+  const t = useTranslations("pdp.buy");
+  const qc = useQueryClient();
+  const [saved, setSavedState] = useState(initial);
+  const [busy, setBusy] = useState(false);
+  return (
+    <button
+      type="button"
+      aria-pressed={saved}
+      disabled={busy}
+      className={buttonClass("secondary", `w-full ${saved ? "border-danger/40 text-danger" : ""}`)}
+      onClick={async () => {
+        setBusy(true);
+        try {
+          await setSaved(variantId, !saved);
+          setSavedState(!saved);
+          void qc.invalidateQueries({ queryKey: wishlistKey });
+        } finally {
+          setBusy(false);
+        }
+      }}
+    >
+      <Icon name="heart" size={18} filled={saved} />
+      {saved ? t("saved") : t("action.wishlist")}
+    </button>
   );
 }

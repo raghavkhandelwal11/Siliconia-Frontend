@@ -83,7 +83,7 @@ describe("BuyBox", () => {
     expect(screen.getByText("24% off")).toBeInTheDocument();
     expect(screen.getByText("Earn 95 Electrons on this order")).toBeInTheDocument();
     expect(screen.getByText(/Electra members earn 380/)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Sign in to buy" })).toHaveAttribute(
+    expect(screen.getAllByRole("link", { name: "Sign in to buy" })[0]).toHaveAttribute(
       "href",
       "/auth/sign-in?next=/p/nova-5g",
     );

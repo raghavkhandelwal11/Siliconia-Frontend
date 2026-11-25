@@ -77,6 +77,7 @@ export function SignInForm({ testMode = false }: { testMode?: boolean }) {
           ? { state: "mfa-required" }
           : { state: "signed-in", account: res.account }) satisfies Session,
       );
+      void qc.invalidateQueries({ queryKey: ["cart"] }); // a guest cart merges on the next read
       router.push(afterSignIn(res.account, next));
     } catch (err) {
       setError(message(err));

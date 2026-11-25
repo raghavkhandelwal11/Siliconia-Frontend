@@ -39,7 +39,8 @@
       "system": "system",
       "light": "light",
       "dark": "dark"
-    }
+    },
+    "cartCount": "Cart, {n, plural, one {# item} other {# items}}"
   },
   "home": {
     "apiStatus": "API status",
@@ -701,17 +702,72 @@
       },
       "reason": {
         "SIGN_IN": "Sign in to buy",
-        "COMING_M2": "Checkout opens with the next release",
+        "COMING_M2": "Checkout opens in the next update. Add to cart for now.",
         "COMING_M3": "Launch deals open soon",
         "COMING_M4": "Opens with the creator and promoter release",
         "COMING_M5": "Admin tools for products arrive soon",
         "OUT_OF_STOCK": "Out of stock right now",
-        "OTHER_ROLE": "Sign in with a buyer account to purchase"
+        "OTHER_ROLE": "Sign in with a buyer account to purchase",
+        "SIGN_IN_SAVE": "Sign in to save to your wishlist"
       },
       "perk": {
         "returns": "7-day returns",
         "delivery": "Delivery updates by SMS and WhatsApp"
-      }
+      },
+      "adding": "Adding…",
+      "addAnother": "Add one more",
+      "added": "Added. {n} in your cart.",
+      "viewCart": "View cart",
+      "addError": "Could not add to cart.",
+      "maxInCart": "You have the most you can buy in your cart",
+      "inCart": "{n} in your cart",
+      "saved": "Saved to wishlist"
     }
+  },
+  "cart": {
+    "title": "Your cart",
+    "loadError": "We could not load your cart. Refresh the page.",
+    "otherRole": "Carts are for shoppers. Sign in with a buyer account to buy.",
+    "emptyTitle": "Your cart is empty",
+    "emptyBody": "Browse categories and add something you love.",
+    "browse": "Browse categories",
+    "merged": "We added {n, plural, one {# product} other {# products}} from before you signed in.",
+    "mergedAdjusted": "We added items from before you signed in. Some quantities changed because of stock limits.",
+    "updateError": "Could not update the cart.",
+    "soldBy": "Sold by {store}",
+    "summary": "Order summary",
+    "items": "Price ({n, plural, one {# item} other {# items}})",
+    "savings": "You save",
+    "subtotal": "Subtotal",
+    "deliveryNote": "Delivery is confirmed at checkout.",
+    "electrons": "Earn {n} Electrons on this order.",
+    "electronsMin": "Orders from ₹2,500 earn Electrons.",
+    "electronsMember": "Members earn {n}.",
+    "checkout": "Proceed to checkout",
+    "checkoutSoon": "Checkout opens in the next update.",
+    "fixProblems": "Fix the items marked above to check out.",
+    "priceDown": "Price dropped by {amount} since you added it",
+    "priceUp": "Price went up by {amount} since you added it",
+    "problem": {
+      "UNAVAILABLE": "No longer available. Remove it to check out.",
+      "OUT_OF_STOCK": "Out of stock. Remove it to check out.",
+      "LOW_STOCK": "Only {n} left."
+    },
+    "quantityFor": "Quantity of {name}",
+    "decrease": "One less",
+    "increase": "One more",
+    "useAvailable": "Keep {n}",
+    "remove": "Remove"
+  },
+  "wishlist": {
+    "title": "Your wishlist",
+    "loadError": "We could not load your wishlist.",
+    "empty": "Save products you like and we will show price drops here.",
+    "browse": "Browse categories",
+    "dropped": "Price dropped by {amount}",
+    "outOfStock": "Out of stock",
+    "addToCart": "Add to cart",
+    "remove": "Remove",
+    "added": "Added to your cart."
   }
 }
