@@ -81,7 +81,12 @@ export function useOrder(id: string) {
     queryKey: orderKey(id),
     queryFn: async () => unwrap(await api.GET("/orders/{id}", { params: { path: { id } } })),
     enabled: id !== "",
-    refetchInterval: (q) => (q.state.data?.status === "PENDING_PAYMENT" ? 2000 : false),
+    // Fast while waiting for payment; slower while a parcel is on its way.
+    refetchInterval: (q) => {
+      const o = q.state.data;
+      if (o?.status === "PENDING_PAYMENT") return 2000;
+      return o?.subOrders.some((s) => s.status === "SHIPPED" || s.status === "OUT_FOR_DELIVERY") ? 15_000 : false;
+    },
   });
 }
 

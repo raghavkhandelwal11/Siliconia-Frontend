@@ -18,6 +18,7 @@ import {
 } from "@/lib/checkout";
 import { Alert, Button, buttonClass, Card } from "@/components/ui/Form";
 import { Icon } from "@/components/ui/Icon";
+import { deliveryDate } from "@/lib/shipping";
 import { AddressForm } from "./AddressForm";
 
 // UI-BUY-02/03: address, pay method, review and place order.
@@ -159,7 +160,11 @@ export function CheckoutPage() {
                     <span className="text-sm">
                       <span className="font-semibold">{t(`method.${m}`)}</span>
                       <span className="block text-muted">
-                        {off ? t("codLimit", { amount: rupees(q.codLimitPaise) }) : t(`methodHint.${m}`)}
+                        {off
+                          ? q.codReason === "PIN_NO_COD"
+                            ? t("codPin")
+                            : t("codLimit", { amount: rupees(q.codLimitPaise) })
+                          : t(`methodHint.${m}`)}
                       </span>
                     </span>
                   </label>
@@ -224,6 +229,12 @@ export function CheckoutPage() {
               <dt className="text-muted">{t("delivery")}</dt>
               <dd className="font-medium text-success">{q.shippingPaise > 0 ? rupees(q.shippingPaise) : t("free")}</dd>
             </div>
+            {q.delivery?.deliverable && q.delivery.etaDays && (
+              <div className="flex justify-between">
+                <dt className="text-muted">{t("arrives")}</dt>
+                <dd className="font-medium">{deliveryDate(q.delivery.etaDays)}</dd>
+              </div>
+            )}
             <div className="flex justify-between border-t border-line pt-2 text-base font-bold">
               <dt>{t("payable")}</dt>
               <dd>{rupees(q.payablePaise)}</dd>
@@ -235,6 +246,7 @@ export function CheckoutPage() {
               {t("electrons", { n: q.electronsNonMember })}
             </p>
           )}
+          {q.delivery && !q.delivery.deliverable && <Alert>{t("notServed")}</Alert>}
           {!phoneOk && (
             <Alert tone="info">
               {t("phoneRequired")}{" "}

@@ -5,6 +5,7 @@ import { renderWithProviders } from "@/test/render";
 import { stubApi } from "@/test/fetch";
 import { nav } from "@/test/navigation";
 import { browser, type Address, type Order, type Quote } from "@/lib/checkout";
+import { deliveryDate } from "@/lib/shipping";
 import { AddressBook } from "./AddressBook";
 import { CheckoutPage } from "./CheckoutPage";
 import { ResultPage } from "./ResultPage";
@@ -160,6 +161,22 @@ describe("CheckoutPage", () => {
     expect(screen.getByText("Available for orders up to ₹8,000.")).toBeInTheDocument();
   });
 
+  it("shows the delivery date and why COD is off for a prepaid-only PIN", async () => {
+    stubApi([
+      me(),
+      { method: "GET", path: "/me/addresses", body: { items: [home], max: 10 } },
+      {
+        method: "POST",
+        path: "/checkout/quote",
+        body: quote({ codEligible: false, codReason: "PIN_NO_COD", delivery: { deliverable: true, etaDays: 6 } }),
+      },
+    ]);
+    renderWithProviders(<CheckoutPage />);
+    expect(await screen.findByText("Not available for this PIN code. Pay online instead.")).toBeInTheDocument();
+    expect(screen.getByText("Arrives by")).toBeInTheDocument();
+    expect(screen.getByText(deliveryDate(6))).toBeInTheDocument();
+  });
+
   it("shows the address form when there is no saved address", async () => {
     stubApi([
       me(),
@@ -199,6 +216,30 @@ describe("ResultPage", () => {
     expect(await screen.findByText("Payment didn't go through")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Try payment again" }));
     await waitFor(() => expect(go).toHaveBeenCalledWith("/pay/checkout/pay_1"));
+  });
+
+  it("shows delivery progress once shipped", async () => {
+    nav.search = new URLSearchParams("order=o1");
+    const base = order({ status: "CONFIRMED", payMethod: "COD", payment: undefined });
+    stubApi([
+      {
+        method: "GET",
+        path: "/orders/o1",
+        body: {
+          ...base,
+          subOrders: [
+            {
+              ...base.subOrders[0],
+              status: "DELIVERED",
+              shipment: { awb: "SX1", courier: "sim-ship", status: "DELIVERED", events: [] },
+            },
+          ],
+        },
+      },
+    ]);
+    renderWithProviders(<ResultPage />);
+    expect(await screen.findByText("Delivered", { selector: "h1" })).toBeInTheDocument();
+    expect(screen.getByText(/AWB SX1/)).toBeInTheDocument();
   });
 
   it("explains an expired order", async () => {
