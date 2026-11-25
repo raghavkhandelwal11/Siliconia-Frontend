@@ -616,6 +616,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search and category listing with filters, facets and sorting (UI-PUB-03)
+         * @description Only live products from approved sellers. Text search uses full-text plus fuzzy matching.
+         *     Spec filters apply to a sub-category: `spec.<key>=a,b` for choices, `spec.<key>=true` for yes/no,
+         *     `spec.<key>=4..8` for number ranges. Facets for a group ignore that group's own selection.
+         *     Cached for 30 seconds.
+         */
+        get: operations["searchProducts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/products/suggest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search-box suggestions (products, brands, sub-categories) for 2+ characters */
+        get: operations["suggestProducts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -859,6 +899,74 @@ export interface components {
             coverUrl?: string;
             /** Format: date-time */
             updatedAt: string;
+        };
+        ProductCard: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            name: string;
+            brand: string;
+            coverUrl?: string;
+            /**
+             * Format: int64
+             * @description Lowest variant price
+             */
+            pricePaise: number;
+            /** Format: int64 */
+            mrpPaise: number;
+            discountPct: number;
+            inStock: boolean;
+            ratingAvg: number;
+            ratingCount: number;
+            isLocal: boolean;
+            verifiedSeller: boolean;
+        };
+        FacetCount: {
+            value: string;
+            label?: string;
+            /** Format: int64 */
+            count: number;
+        };
+        SpecFacet: {
+            key: string;
+            label: string;
+            /** @enum {string} */
+            type: "number" | "text" | "enum" | "multi" | "boolean";
+            unit?: string;
+            options?: components["schemas"]["FacetCount"][];
+            min?: number;
+            max?: number;
+        };
+        SearchResult: {
+            items: components["schemas"]["ProductCard"][];
+            /** Format: int64 */
+            total: number;
+            page: number;
+            pageSize: number;
+            facets: {
+                categories: components["schemas"]["FacetCount"][];
+                brands: components["schemas"]["FacetCount"][];
+                /** @description [lowest, highest] price in paise */
+                price?: number[];
+                specs: components["schemas"]["SpecFacet"][];
+            };
+            category?: {
+                slug: string;
+                name: string;
+                icon?: string;
+                parentSlug?: string;
+                parentName?: string;
+            };
+            /** @description Spec filters this category does not have */
+            ignoredFilters?: string[];
+        };
+        Suggestion: {
+            /** @enum {string} */
+            kind: "product" | "brand" | "category";
+            text: string;
+            slug?: string;
+            coverUrl?: string;
+            brand?: string;
         };
         Health: {
             /** @enum {string} */
@@ -2044,6 +2152,75 @@ export interface operations {
             404: components["responses"]["Error"];
             409: components["responses"]["Error"];
             422: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    searchProducts: {
+        parameters: {
+            query?: {
+                q?: string;
+                /** @description Slug; a top-level category includes its sub-categories */
+                category?: string;
+                /** @description Comma-separated */
+                brand?: string;
+                /** @description Paise */
+                priceMin?: number;
+                /** @description Paise */
+                priceMax?: number;
+                rating?: number;
+                local?: boolean;
+                inStock?: boolean;
+                verified?: boolean;
+                sort?: "relevance" | "price_asc" | "price_desc" | "newest" | "rating" | "popular";
+                page?: number;
+                pageSize?: number;
+                /** @description Spec filters sent as spec.<key>=<value> (see description) */
+                spec?: {
+                    [key: string]: string;
+                };
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description One page of results with facets */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchResult"];
+                };
+            };
+            400: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    suggestProducts: {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Suggestions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        suggestions: components["schemas"]["Suggestion"][];
+                    };
+                };
+            };
             429: components["responses"]["RateLimited"];
         };
     };

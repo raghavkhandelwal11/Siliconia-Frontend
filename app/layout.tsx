@@ -30,7 +30,7 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const locale = await getLocale();
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         {/* Applies a saved light/dark choice before paint, so there is no flash. */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
