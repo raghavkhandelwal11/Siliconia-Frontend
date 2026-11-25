@@ -8,10 +8,10 @@ updates:
       minor-and-patch:
         update-types: [minor, patch]
     ignore:
-      # TypeScript 7 (the Go compiler) has no JavaScript API yet, and
-      # openapi-typescript needs it (peer typescript ^5). Revisit when it supports 7.
+      # openapi-typescript (API type generation) supports TypeScript 5 only
+      # (peer typescript ^5.x); 6 and 7 fail npm ci. Revisit when it supports them.
       - dependency-name: typescript
-        versions: [">=7"]
+        versions: [">=6"]
       # Node types follow the Node version we run (26); upgrade them together with Node.
       - dependency-name: "@types/node"
         update-types: [version-update:semver-major]
