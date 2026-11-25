@@ -43,6 +43,13 @@ export function AdminHome() {
           {t("open")}
         </Link>
       </Card>
+      <Card>
+        <h2 className="text-lg font-semibold">{t("launches")}</h2>
+        <p className="mt-2 text-muted">{t("launchesBody")}</p>
+        <Link href="/admin/launches" className="mt-3 inline-block font-semibold text-accent underline">
+          {t("open")}
+        </Link>
+      </Card>
     </div>
   );
 }

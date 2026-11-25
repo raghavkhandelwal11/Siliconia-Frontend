@@ -68,6 +68,13 @@ const quote = (extra: Partial<Quote> = {}): Quote => ({
   quoteHash: "h1",
   canPlace: true,
   address: home,
+  isMember: true,
+  electronsAvailable: 0,
+  electronsMax: 0,
+  electronsUsed: 0,
+  electronsEarn: 112,
+  electronsOnly: false,
+  launchDeal: false,
   ...extra,
 });
 
@@ -133,7 +140,12 @@ describe("CheckoutPage", () => {
     await waitFor(() => expect(go).toHaveBeenCalledWith("http://localhost:8080/pay/checkout/pay_1"));
     const placed = calls.find((c) => c.method === "POST" && c.url.endsWith("/orders"))!;
     expect(placed.headers.get("Idempotency-Key")).toBeTruthy();
-    expect(await placed.clone().json()).toEqual({ addressId: "ad1", payMethod: "ONLINE", quoteHash: "h1" });
+    expect(await placed.clone().json()).toEqual({
+      addressId: "ad1",
+      payMethod: "ONLINE",
+      quoteHash: "h1",
+      electrons: 0,
+    });
   });
 
   it("confirms cash on delivery orders without the payment page", async () => {
@@ -159,7 +171,7 @@ describe("CheckoutPage", () => {
     stubApi([
       me(false),
       { method: "GET", path: "/me/addresses", body: { items: [home], max: 10 } },
-      { method: "POST", path: "/checkout/quote", body: quote({ codEligible: false }) },
+      { method: "POST", path: "/checkout/quote", body: quote({ codEligible: false, codReason: "OVER_LIMIT" }) },
     ]);
     renderWithProviders(<CheckoutPage />);
     expect(await screen.findByText(/Verify your mobile number/)).toBeInTheDocument();

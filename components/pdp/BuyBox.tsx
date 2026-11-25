@@ -10,6 +10,7 @@ import { qtyInCart, setSaved, useCart, useSetQty, wishlistKey } from "@/lib/cart
 import { optionGroups, pickVariant, type ProductPage } from "@/lib/pdp";
 import { buttonClass } from "@/components/ui/Form";
 import { PinCheck } from "@/components/shipping/PinCheck";
+import { rupees as inrRupees } from "@/lib/checkout";
 import { Icon, type IconName } from "@/components/ui/Icon";
 
 const inr = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
@@ -166,6 +167,20 @@ export function BuyBox({ product }: { product: ProductPage }) {
           );
         })}
       </div>
+
+      {live.data?.launch && (
+        <Link
+          href={`/launches/${live.data.launch.id}`}
+          className="pop flex items-center justify-between gap-3 rounded-xl bg-brand-gradient p-3 text-sm font-semibold text-white"
+        >
+          <span>
+            {t(live.data.launch.status === "SCHEDULED" ? "launchSoon" : "launchLive", {
+              price: inrRupees(live.data.launch.dealPricePaise),
+            })}
+          </span>
+          <Icon name="arrow" size={18} />
+        </Link>
+      )}
 
       <PinCheck />
 
