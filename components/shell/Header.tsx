@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Icon } from "@/components/ui/Icon";
 import { AccountMenu } from "@/components/auth/AccountMenu";
+import { CategoryMenu } from "@/components/catalogue/CategoryMenu";
 
 // UI-GLB-01/02: logo, search, categories, wishlist, notifications, cart and
 // account. Counts and the bell's live updates arrive with M1–M2.
@@ -14,10 +15,7 @@ export function Header() {
         <Link href="/" className="text-lg font-bold tracking-tight text-brand">
           {t("app.name")}
         </Link>
-        <Link href="/categories" className="hidden items-center gap-1.5 text-sm font-medium md:inline-flex">
-          <Icon name="grid" size={18} />
-          {t("shell.categories")}
-        </Link>
+        <CategoryMenu />
         <form role="search" action="/search" className="mx-2 flex flex-1">
           <label htmlFor="site-search" className="sr-only">
             {t("shell.search")}
