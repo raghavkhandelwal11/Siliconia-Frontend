@@ -1293,6 +1293,79 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** In-app notifications, newest first (30 per page), and the unread count */
+        get: operations["listNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/notifications/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Mark notifications read (an empty list marks all) */
+        post: operations["markNotificationsRead"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/notifications/stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Server-sent events for the bell (LLD 13)
+         * @description `event: unread` with `{"unread": n}` first, then `event: notification` with a Notification for each new one,
+         *     and a comment heartbeat every 25 s. The stream ends after 30 minutes; EventSource reconnects on its own.
+         */
+        get: operations["streamNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/notification-prefs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Channel choices (SMS and in-app are always on for order updates) */
+        get: operations["getNotificationPrefs"];
+        /** Save channel choices */
+        put: operations["saveNotificationPrefs"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/webhooks/payment": {
         parameters: {
             query?: never;
@@ -2115,6 +2188,25 @@ export interface components {
         };
         IssueList: {
             items: components["schemas"]["Issue"][];
+        };
+        Notification: {
+            /** Format: uuid */
+            id: string;
+            template: string;
+            title: string;
+            body: string;
+            /** @description Path in the web app */
+            link?: string;
+            /** Format: date-time */
+            readAt?: string;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        NotificationPrefs: {
+            whatsapp: boolean;
+            email: boolean;
+            /** @description Launch alerts and offers (opt-in) */
+            marketing: boolean;
         };
     };
     responses: {
@@ -4432,6 +4524,127 @@ export interface operations {
             };
             400: components["responses"]["Error"];
             409: components["responses"]["Error"];
+        };
+    };
+    listNotifications: {
+        parameters: {
+            query?: {
+                /** @description Page backwards from this time */
+                before?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Notifications */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: components["schemas"]["Notification"][];
+                        unread: number;
+                    };
+                };
+            };
+            401: components["responses"]["Error"];
+        };
+    };
+    markNotificationsRead: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    ids: string[];
+                };
+            };
+        };
+        responses: {
+            /** @description Unread count after the change */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        unread: number;
+                    };
+                };
+            };
+        };
+    };
+    streamNotifications: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Event stream */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": string;
+                };
+            };
+            401: components["responses"]["Error"];
+        };
+    };
+    getNotificationPrefs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Preferences */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPrefs"];
+                };
+            };
+        };
+    };
+    saveNotificationPrefs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationPrefs"];
+            };
+        };
+        responses: {
+            /** @description Saved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPrefs"];
+                };
+            };
+            400: components["responses"]["Error"];
         };
     };
     paymentWebhook: {

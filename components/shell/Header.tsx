@@ -7,6 +7,7 @@ import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 import { SearchBox } from "@/components/listing/SearchBox";
 import { CartButton } from "@/components/cart/CartButton";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 // UI-GLB-01/02: logo, categories, search, theme, wishlist, notifications, cart
 // and account. Sticky frosted glass so content scrolls softly underneath.
@@ -29,13 +30,7 @@ export function Header() {
           >
             <Icon name="heart" />
           </Link>
-          <Link
-            href="/account/notifications"
-            className={`${iconLink} hidden md:inline-flex`}
-            aria-label={t("shell.notifications")}
-          >
-            <Icon name="bell" />
-          </Link>
+          <NotificationBell className="hidden md:inline-flex" />
           <CartButton />
           <AccountMenu />
         </nav>
