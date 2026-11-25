@@ -92,10 +92,12 @@ const order = (extra: Partial<Order> = {}): Order => ({
       events: [],
       canCancel: false,
       hasInvoice: false,
+      isReplacement: false,
       items: [
         {
           id: "i1",
           status: "ACTIVE",
+          canReturn: false,
           name: "Volt Cell",
           slug: "volt-cell",
           attrs: {},

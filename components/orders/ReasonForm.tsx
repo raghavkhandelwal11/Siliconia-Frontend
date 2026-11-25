@@ -7,12 +7,14 @@ import { Button } from "@/components/ui/Form";
 /** A short "why?" form that opens in place, used for cancelling. */
 export function ReasonForm({
   label,
+  prompt,
   confirm,
   busy,
   onSubmit,
   suggestions = [],
 }: {
   label: string;
+  prompt?: string;
   confirm: string;
   busy: boolean;
   onSubmit: (reason: string) => void;
@@ -39,7 +41,7 @@ export function ReasonForm({
       }}
     >
       <label htmlFor={id} className="block text-sm font-medium">
-        {t("reasonLabel")}
+        {prompt ?? t("reasonLabel")}
       </label>
       {suggestions.length > 0 && (
         <div className="flex flex-wrap gap-2">

@@ -1100,6 +1100,199 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/order-items/{id}/returns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Return or replace a delivered item within the return window (7 days) */
+        post: operations["requestReturn"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/returns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The buyer's returns and replacements */
+        get: operations["listReturns"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/returns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Returns for the seller's items */
+        get: operations["sellerReturns"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/returns/{id}/decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Approve (books the courier pickup) or reject (with a reason) a return
+         * @description When the item reaches the seller, a RETURN is refunded to the original payment method (REFUNDED) or, for cash
+         *     on delivery, marked REFUND_PENDING for a bank transfer. A REPLACE creates a zero-value replacement sub-order
+         *     for the seller to ship (RECEIVED, then REPLACEMENT_SHIPPED), or is refunded when out of stock.
+         */
+        post: operations["decideReturn"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/issues": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The buyer's issues */
+        get: operations["listIssues"];
+        put?: never;
+        /** Raise an issue on an order (3-step form) */
+        post: operations["raiseIssue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/issues/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One issue with its conversation */
+        get: operations["getIssue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/issues/{id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add a message (moves WAITING_CUSTOMER back to IN_PROGRESS) */
+        post: operations["replyIssue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/issues/{id}/reopen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reopen a resolved issue (closed issues stay closed) */
+        post: operations["reopenIssue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/issues": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Support queue (admin with authenticator), open first */
+        get: operations["supportIssues"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/issues/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One issue for support */
+        get: operations["supportIssue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/issues/{id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reply as support and set IN_PROGRESS, WAITING_CUSTOMER or RESOLVED */
+        post: operations["supportReply"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/webhooks/payment": {
         parameters: {
             query?: never;
@@ -1694,6 +1887,15 @@ export interface components {
             id: string;
             /** @enum {string} */
             status: "ACTIVE" | "CANCELLED" | "RETURNED" | "REPLACED";
+            canReturn: boolean;
+            return?: {
+                /** Format: uuid */
+                id: string;
+                number: string;
+                /** @enum {string} */
+                type: "RETURN" | "REPLACE";
+                status: string;
+            };
             name: string;
             slug: string;
             coverUrl?: string;
@@ -1749,6 +1951,7 @@ export interface components {
                 cancelledBy?: "BUYER" | "SELLER" | "ADMIN";
                 canCancel: boolean;
                 hasInvoice: boolean;
+                isReplacement: boolean;
                 shipment?: {
                     awb: string;
                     courier: string;
@@ -1849,6 +2052,70 @@ export interface components {
             canShip: boolean;
             canCancel: boolean;
         };
+        Return: {
+            /** Format: uuid */
+            id: string;
+            number: string;
+            /** Format: uuid */
+            orderId: string;
+            orderNumber: string;
+            /** Format: uuid */
+            itemId: string;
+            productName: string;
+            attrs: {
+                [key: string]: string;
+            };
+            coverUrl?: string;
+            qty: number;
+            /** @enum {string} */
+            type: "RETURN" | "REPLACE";
+            reason: string;
+            note?: string;
+            /** @enum {string} */
+            status: "REQUESTED" | "REJECTED" | "PICKUP_SCHEDULED" | "PICKED_UP" | "RECEIVED" | "REFUNDED" | "REFUND_PENDING" | "REPLACEMENT_SHIPPED";
+            rejectReason?: string;
+            pickupAwb?: string;
+            /** Format: int64 */
+            refundAmountPaise: number;
+            outcomeNote?: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        Issue: {
+            /** Format: uuid */
+            id: string;
+            number: string;
+            /** Format: uuid */
+            orderId: string;
+            orderNumber: string;
+            /** Format: uuid */
+            orderItemId?: string;
+            type: string;
+            /** @enum {string} */
+            status: "OPEN" | "IN_PROGRESS" | "WAITING_CUSTOMER" | "RESOLVED" | "CLOSED";
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            /** Format: date-time */
+            firstResponseAt?: string;
+            /** Format: date-time */
+            resolvedAt?: string;
+            messages?: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                authorRole: "BUYER" | "SUPPORT";
+                body: string;
+                /** Format: date-time */
+                at: string;
+            }[];
+        };
+        IssueList: {
+            items: components["schemas"]["Issue"][];
+        };
     };
     responses: {
         /** @description Problem details (see code) */
@@ -1873,6 +2140,18 @@ export interface components {
     };
     parameters: never;
     requestBodies: {
+        IssueMessage: {
+            content: {
+                "application/json": {
+                    body: string;
+                    /**
+                     * @description Support only
+                     * @enum {string}
+                     */
+                    status?: "IN_PROGRESS" | "WAITING_CUSTOMER" | "RESOLVED";
+                };
+            };
+        };
         CancelReason: {
             content: {
                 "application/json": {
@@ -3846,6 +4125,312 @@ export interface operations {
                 };
             };
             404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+        };
+    };
+    requestReturn: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    type: "RETURN" | "REPLACE";
+                    /** @enum {string} */
+                    reason: "DAMAGED" | "DEFECTIVE" | "WRONG_ITEM" | "NOT_AS_DESCRIBED" | "MISSING_PARTS" | "NO_LONGER_NEEDED";
+                    note?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Requested */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Return"];
+                };
+            };
+            400: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+        };
+    };
+    listReturns: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: components["schemas"]["Return"][];
+                    };
+                };
+            };
+        };
+    };
+    sellerReturns: {
+        parameters: {
+            query?: {
+                status?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: components["schemas"]["Return"][];
+                    };
+                };
+            };
+        };
+    };
+    decideReturn: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    approve: boolean;
+                    /** @description Required to reject */
+                    reason?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Decided */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            503: components["responses"]["Error"];
+        };
+    };
+    listIssues: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Issues */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IssueList"];
+                };
+            };
+        };
+    };
+    raiseIssue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    orderId: string;
+                    /** Format: uuid */
+                    orderItemId?: string;
+                    /** @enum {string} */
+                    type: "NOT_DELIVERED" | "DAMAGED" | "WRONG_ITEM" | "MISSING_PARTS" | "PAYMENT" | "RETURN_REFUND" | "OTHER";
+                    body: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Raised */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Issue"];
+                };
+            };
+            400: components["responses"]["Error"];
+        };
+    };
+    getIssue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Issue */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Issue"];
+                };
+            };
+            404: components["responses"]["Error"];
+        };
+    };
+    replyIssue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["IssueMessage"];
+        responses: {
+            /** @description Issue */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Issue"];
+                };
+            };
+            400: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+        };
+    };
+    reopenIssue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Issue */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Issue"];
+                };
+            };
+            409: components["responses"]["Error"];
+        };
+    };
+    supportIssues: {
+        parameters: {
+            query?: {
+                status?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Issues */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IssueList"];
+                };
+            };
+            403: components["responses"]["Error"];
+        };
+    };
+    supportIssue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Issue */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Issue"];
+                };
+            };
+        };
+    };
+    supportReply: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["IssueMessage"];
+        responses: {
+            /** @description Issue */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Issue"];
+                };
+            };
+            400: components["responses"]["Error"];
             409: components["responses"]["Error"];
         };
     };

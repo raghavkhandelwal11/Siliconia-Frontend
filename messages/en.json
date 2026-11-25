@@ -282,7 +282,9 @@
     "links": {
       "orders": "Your orders",
       "addresses": "Saved addresses",
-      "wishlist": "Wishlist"
+      "wishlist": "Wishlist",
+      "returns": "Returns",
+      "issues": "Help with an order"
     }
   },
   "categories": {
@@ -416,7 +418,8 @@
       "approvedBody": "Add products with photos, variants and stock, then publish them to the store.",
       "products": "Your products",
       "addProduct": "Add a product",
-      "orders": "Orders"
+      "orders": "Orders",
+      "returns": "Returns"
     }
   },
   "admin": {
@@ -425,7 +428,9 @@
       "sellerApprovals": "Seller approvals",
       "pending": "{count, plural, =0 {No applications waiting} one {# application waiting} other {# applications waiting}}",
       "loading": "Loading…",
-      "open": "Open the queue"
+      "open": "Open the queue",
+      "support": "Support issues",
+      "supportBody": "Buyer issues waiting for a reply, oldest first."
     },
     "approvals": {
       "title": "Seller approvals",
@@ -949,7 +954,11 @@
       "RTO_INITIATED": "Returning to seller",
       "RTO_DELIVERED": "Returned to seller",
       "CANCELLED": "Shipment cancelled"
-    }
+    },
+    "free": "Free",
+    "replacement": "Replacement",
+    "helpPrompt": "Something not right with this order?",
+    "getHelp": "Get help"
   },
   "shipping": {
     "pinLabel": "PIN code for delivery",
@@ -1014,6 +1023,107 @@
       "damaged": "Item damaged",
       "address": "Cannot deliver to this address"
     },
-    "cancelled": "Cancelled: {reason}"
+    "cancelled": "Cancelled: {reason}",
+    "cancelPrompt": "Why are you cancelling? The buyer sees this."
+  },
+  "returns": {
+    "title": "Returns and replacements",
+    "sellerTitle": "Returns",
+    "start": "Return or replace",
+    "want": "What would you like?",
+    "type": {
+      "RETURN": "Return for refund",
+      "REPLACE": "Replacement"
+    },
+    "reason": "Reason",
+    "chooseReason": "Choose a reason",
+    "reasons": {
+      "DAMAGED": "Arrived damaged",
+      "DEFECTIVE": "Doesn't work properly",
+      "WRONG_ITEM": "Wrong item sent",
+      "NOT_AS_DESCRIBED": "Not as described",
+      "MISSING_PARTS": "Parts or accessories missing",
+      "NO_LONGER_NEEDED": "No longer needed"
+    },
+    "note": "Anything else we should know? (optional)",
+    "submit": "Request pickup",
+    "cancel": "Not now",
+    "pickupNote": "The seller reviews your request. Once approved, a courier collects the item from your delivery address.",
+    "windowEnds": "Returns open until {date}",
+    "error": "Could not request the return.",
+    "loadError": "Could not load returns.",
+    "empty": "You haven't returned anything.",
+    "sellerEmpty": "No returns here.",
+    "filter": "Filter returns",
+    "toDecide": "To decide",
+    "all": "All",
+    "approve": "Approve and book pickup",
+    "reject": "Reject",
+    "rejectPrompt": "Why are you rejecting it? The buyer sees this.",
+    "rejected": "Not approved: {reason}",
+    "pickupAwb": "Pickup AWB {awb}",
+    "refundAmount": "Refund {amount}",
+    "status": {
+      "REQUESTED": "Waiting for the seller",
+      "REJECTED": "Not approved",
+      "PICKUP_SCHEDULED": "Pickup booked",
+      "PICKED_UP": "Picked up",
+      "RECEIVED": "Received by seller",
+      "REFUNDED": "Refunded",
+      "REFUND_PENDING": "Refund to bank pending",
+      "REPLACEMENT_SHIPPED": "Replacement shipped"
+    }
+  },
+  "issues": {
+    "title": "Help with orders",
+    "supportTitle": "Support issues",
+    "raise": "Get help with an order",
+    "empty": "No issues.",
+    "loadError": "Could not load issues.",
+    "loadErrorOne": "Could not load this issue.",
+    "error": "That didn't work. Try again.",
+    "steps": "Steps",
+    "step1": "1 · Order",
+    "step2": "2 · Problem",
+    "step3": "3 · Details",
+    "noOrders": "You don't have any orders yet.",
+    "itemCount": "{n, plural, one {# item} other {# items}}",
+    "next": "Next",
+    "back": "Back",
+    "whichItem": "Which item?",
+    "wholeOrder": "The whole order",
+    "whatWrong": "What went wrong?",
+    "type": {
+      "NOT_DELIVERED": "Not delivered",
+      "DAMAGED": "Arrived damaged",
+      "WRONG_ITEM": "Wrong item",
+      "MISSING_PARTS": "Missing parts",
+      "PAYMENT": "Payment or refund",
+      "RETURN_REFUND": "Return or replacement",
+      "OTHER": "Something else"
+    },
+    "describe": "Tell us what happened",
+    "submit": "Send to support",
+    "order": "Order {number}",
+    "conversation": "Conversation",
+    "author": {
+      "BUYER": "You",
+      "SUPPORT": "Siliconics support"
+    },
+    "reply": "Your message",
+    "send": "Send",
+    "setStatus": "Then mark the issue as",
+    "reopen": "Reopen",
+    "resolvedHint": "Support marked this resolved. Still need help?",
+    "closedHint": "This issue is closed. Raise a new one if you need more help.",
+    "filter": "Filter issues",
+    "all": "All",
+    "status": {
+      "OPEN": "Open",
+      "IN_PROGRESS": "In progress",
+      "WAITING_CUSTOMER": "Waiting for you",
+      "RESOLVED": "Resolved",
+      "CLOSED": "Closed"
+    }
   }
 }

@@ -31,6 +31,18 @@ export function AdminHome() {
           {t("open")}
         </Link>
       </Card>
+      <Card>
+        <div className="flex items-center gap-3">
+          <span className="icon-tile size-11" style={{ "--hue": 25 } as React.CSSProperties}>
+            <Icon name="info" size={22} />
+          </span>
+          <h2 className="text-lg font-semibold">{t("support")}</h2>
+        </div>
+        <p className="mt-2 text-muted">{t("supportBody")}</p>
+        <Link href="/admin/issues" className="mt-3 inline-block font-semibold text-accent underline">
+          {t("open")}
+        </Link>
+      </Card>
     </div>
   );
 }
