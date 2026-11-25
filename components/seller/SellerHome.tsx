@@ -32,6 +32,9 @@ export function SellerHome() {
             <Link href="/seller/returns" className={buttonClass("secondary")}>
               {t("returns")}
             </Link>
+            <Link href="/seller/payouts" className={buttonClass("secondary")}>
+              {t("payouts")}
+            </Link>
             <Link href="/seller/products" className={buttonClass("secondary")}>
               {t("products")}
             </Link>

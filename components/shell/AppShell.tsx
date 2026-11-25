@@ -3,6 +3,7 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { BottomNav } from "./BottomNav";
 import { TestModeBanner } from "./TestModeBanner";
+import { LegalPrompt } from "@/components/m5/Seller";
 
 // Global shell on every page (UI-GLB-01 … 11): skip link, TEST MODE banner,
 // header, main content, footer and the phone bottom navigation.
@@ -19,6 +20,7 @@ export function AppShell({ children, testMode }: { children: React.ReactNode; te
       {testMode && <TestModeBanner />}
       <Header />
       <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 pb-24 pt-6 md:pb-12 md:pt-8">
+        <LegalPrompt />
         {children}
       </main>
       <Footer testMode={testMode} />
