@@ -25,7 +25,7 @@ export function ApplicationStatus({
   const current =
     app.approval === "DRAFT" ? 0 : app.approval === "SUBMITTED" || app.approval === "UNDER_REVIEW" ? 1 : 2;
   return (
-    <section aria-label={t("label")} className="rounded-2xl border border-line bg-surface p-5">
+    <section aria-label={t("label")} className="card rise p-5">
       <div className="flex flex-wrap items-center gap-3">
         <StatusChip tone={tone[app.approval]}>{t(app.approval)}</StatusChip>
         {app.submittedAt && (
@@ -39,7 +39,7 @@ export function ApplicationStatus({
           <li
             key={s}
             aria-current={i === current ? "step" : undefined}
-            className={`rounded-lg border px-2 py-2 ${i <= current ? "border-accent font-semibold" : "border-line text-muted"}`}
+            className={`rounded-xl border px-2 py-2 transition ${i < current ? "border-success/40 bg-success/10 text-success" : i === current ? "bg-brand-gradient border-transparent font-semibold text-white" : "border-line text-muted"}`}
           >
             {t(`stage.${s}`)}
           </li>

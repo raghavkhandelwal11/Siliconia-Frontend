@@ -31,17 +31,23 @@ export function SellerQueue() {
             role="tab"
             aria-selected={tab === x}
             onClick={() => setTab(x)}
-            className={`min-h-10 rounded-full border px-4 text-sm ${tab === x ? "border-accent bg-surface font-semibold" : "border-line text-muted"}`}
+            className={`min-h-10 rounded-full border px-4 text-sm transition ${tab === x ? "bg-brand-gradient border-transparent font-semibold text-white shadow-card" : "border-line text-muted hover:border-brand/40"}`}
           >
             {t(`tabs.${x}`)}
           </button>
         ))}
       </div>
-      {list.isPending && <p className="text-muted">{t("loading")}</p>}
+      {list.isPending && (
+        <div className="card space-y-3 p-4" aria-label={t("loading")}>
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="skeleton h-8" />
+          ))}
+        </div>
+      )}
       {list.isError && <Alert>{t("loadError")}</Alert>}
       {list.data && list.data.length === 0 && <p className="text-muted">{t(`empty.${tab}`)}</p>}
       {list.data && list.data.length > 0 && (
-        <div className="overflow-x-auto rounded-2xl border border-line bg-surface">
+        <div className="card rise overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="border-b border-line text-muted">
               <tr>
@@ -53,7 +59,7 @@ export function SellerQueue() {
             </thead>
             <tbody>
               {list.data.map((a) => (
-                <tr key={a.accountId} className="border-b border-line last:border-0">
+                <tr key={a.accountId} className="border-b border-line transition last:border-0 hover:bg-brand-soft/50">
                   <td className="px-4 py-3">
                     <Link
                       href={`/admin/approvals/sellers/${a.accountId}`}

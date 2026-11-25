@@ -6,7 +6,7 @@ import { api } from "@/lib/api/client";
 import { StatusChip } from "@/components/ui/StatusChip";
 
 // Shows whether the web app can reach the API (M0 "done when" check).
-export function ApiStatus() {
+export function ApiStatus({ compact = false }: { compact?: boolean }) {
   const t = useTranslations();
   const { data, isPending, isError } = useQuery({
     queryKey: ["healthz"],
@@ -17,6 +17,23 @@ export function ApiStatus() {
     },
   });
 
+  if (compact) {
+    return (
+      <p className="inline-flex items-center gap-2 text-xs">
+        <span
+          className={
+            isError ? "size-2 rounded-full bg-danger" : isPending ? "size-2 rounded-full bg-neutral" : "live-dot"
+          }
+        />
+        {t("home.apiStatus")}:{" "}
+        {isPending
+          ? t("status.checking")
+          : isError
+            ? t("status.down")
+            : `${t("status.ok")} · ${data.version} · ${data.mode}`}
+      </p>
+    );
+  }
   return (
     <div className="flex flex-wrap items-center gap-3">
       <span className="font-medium">{t("home.apiStatus")}</span>

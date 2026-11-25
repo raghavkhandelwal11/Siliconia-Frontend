@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { CategoryDetail } from "@/lib/catalogue";
-import { CategoryIcon } from "./CategoryIcon";
+import type { CSSProperties } from "react";
+import { CategoryTile, hueFor } from "./CategoryIcon";
 
 // /c/[slug]: a top-level category lists its sub-categories; a sub-category
 // shows what shoppers can filter by. Product listings arrive with search (T1.7).
@@ -32,15 +33,21 @@ export function CategoryOverview({ category }: { category: CategoryDetail }) {
         </ol>
       </nav>
 
-      <header className="flex items-center gap-3">
-        {!category.parent && (
-          <span className="inline-flex size-12 items-center justify-center rounded-full bg-surface text-brand">
-            <CategoryIcon icon={category.icon} size={28} />
-          </span>
-        )}
-        <div>
-          <h1 className="text-2xl font-bold">{category.name}</h1>
-          {category.examples && <p className="text-muted">{category.examples}</p>}
+      <header
+        className="card rise relative overflow-hidden p-6 sm:p-8"
+        style={{ "--hue": hueFor(category.icon ?? category.parent?.icon) } as CSSProperties}
+      >
+        <div
+          aria-hidden="true"
+          className="glow-orb -right-16 -top-20 size-64"
+          style={{ background: "hsl(var(--hue) 85% 60% / 0.22)" }}
+        />
+        <div className="relative flex items-center gap-4">
+          <CategoryTile icon={category.icon ?? category.parent?.icon} size={56} />
+          <div>
+            <h1 className="text-2xl font-bold sm:text-3xl">{category.name}</h1>
+            {category.examples && <p className="mt-1 text-muted">{category.examples}</p>}
+          </div>
         </div>
       </header>
 
@@ -50,12 +57,9 @@ export function CategoryOverview({ category }: { category: CategoryDetail }) {
             {t("subcategories")}
           </h2>
           <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {category.children.map((s) => (
-              <li key={s.id}>
-                <Link
-                  href={`/c/${s.slug}`}
-                  className="flex h-full flex-col rounded-xl border border-line bg-surface p-4 hover:border-accent"
-                >
+            {category.children.map((s, i) => (
+              <li key={s.id} className="rise" style={{ "--d": `${i * 40}ms` } as CSSProperties}>
+                <Link href={`/c/${s.slug}`} className="card card-hover flex h-full flex-col p-4">
                   <span className="font-semibold">{s.name}</span>
                   {s.examples && <span className="mt-1 text-sm text-muted">{s.examples}</span>}
                 </Link>
@@ -72,7 +76,10 @@ export function CategoryOverview({ category }: { category: CategoryDetail }) {
           </h2>
           <ul className="mt-3 flex flex-wrap gap-2">
             {filters.map((f) => (
-              <li key={f.key} className="rounded-full border border-line bg-surface px-3 py-1 text-sm">
+              <li
+                key={f.key}
+                className="rounded-full border border-line bg-surface px-3 py-1 text-sm transition hover:border-brand/40 hover:bg-brand-soft"
+              >
                 {f.unit ? `${f.label} (${f.unit})` : f.label}
               </li>
             ))}
@@ -81,7 +88,7 @@ export function CategoryOverview({ category }: { category: CategoryDetail }) {
       )}
 
       {category.parent && (
-        <section className="rounded-2xl border border-dashed border-line bg-surface p-6">
+        <section className="rounded-3xl border border-dashed border-line bg-surface/60 p-8 text-center">
           <h2 className="text-lg font-semibold">{t("noProducts")}</h2>
           <p className="mt-1 text-muted">{t("noProductsBody")}</p>
         </section>

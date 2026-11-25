@@ -24,14 +24,117 @@
       "help": "Help",
       "legal": "Terms and privacy",
       "grievance": "Grievance officer",
-      "copyright": "© {year} Siliconics. Prototype build."
+      "copyright": "© {year} Siliconics. Prototype build.",
+      "shop": "Shop",
+      "partners": "Partner with us",
+      "support": "Support",
+      "allCategories": "All categories",
+      "electra": "Electra Membership",
+      "launches": "Launch deals",
+      "sell": "Sell on Siliconics",
+      "theme": "Light, dark or system"
+    },
+    "theme": {
+      "label": "Theme: {current}. Switch to {next}",
+      "system": "system",
+      "light": "light",
+      "dark": "dark"
     }
   },
   "home": {
-    "title": "Welcome to Siliconics",
-    "intro": "The store is being built. This page checks that the web app can reach the API.",
     "apiStatus": "API status",
-    "apiVersion": "Version {version}, mode {mode}"
+    "apiVersion": "Version {version}, mode {mode}",
+    "hero": {
+      "eyebrow": "Members get launch-day deals up to 80% off",
+      "titleStart": "Electronics worth getting",
+      "titleHighlight": "excited",
+      "titleEnd": "about",
+      "subtitle": "Popular brands and Made in India gadgets from verified sellers, reviewed by creators you trust, with rewards on every order.",
+      "explore": "Explore categories",
+      "electra": "Join Electra",
+      "points": {
+        "returns": "7-day returns",
+        "verified": "Verified sellers",
+        "rewards": "Electrons on every order"
+      },
+      "preview": {
+        "launch": "Launch deal",
+        "members": "Electra members",
+        "phone": "New 5G phone · launch stock",
+        "unitsLeft": "6 deal units · then normal price",
+        "electrons": "Electrons earned",
+        "electronValue": "1 Electron = ₹1 off your next order",
+        "creator": "Reviewed by a creator",
+        "followers": "5,000+ followers",
+        "review": "“Best camera at this price.”"
+      }
+    },
+    "highlights": {
+      "eyebrow": "Only on Siliconics",
+      "title": "More than a store",
+      "more": "Learn more",
+      "electra": {
+        "title": "Electra Membership",
+        "stat": "₹650 / year",
+        "body": "Members-only launch deals, 2% back in Electrons on orders from ₹800, and early access."
+      },
+      "electrons": {
+        "title": "Electrons",
+        "stat": "1 = ₹1",
+        "body": "Earn on every eligible order once the return window closes; spend them like cash for 12 months."
+      },
+      "launches": {
+        "title": "Launch deals",
+        "stat": "Up to 80% off",
+        "body": "A few units of new launches at a deep discount for members; the rest sell at the normal price."
+      },
+      "creators": {
+        "title": "Creator reviews",
+        "stat": "5,000+ followers",
+        "body": "Real reviews from creators who tested the product, ranked by how early they reviewed."
+      }
+    },
+    "categories": {
+      "title": "Shop by category",
+      "all": "All categories",
+      "loading": "Loading categories"
+    },
+    "sell": {
+      "title": "Sell to India's electronics fans",
+      "body": "Reach buyers who love new launches. Get paid weekly once the return window closes.",
+      "cta": "Start selling",
+      "step": "Step {n}",
+      "apply": {
+        "title": "Apply",
+        "body": "Tell us about your business and store."
+      },
+      "verify": {
+        "title": "Verify",
+        "body": "Quick PAN and bank checks, GSTIN if registered."
+      },
+      "list": {
+        "title": "List and sell",
+        "body": "Add products, ship orders, get paid weekly."
+      }
+    },
+    "trust": {
+      "returns": {
+        "title": "7-day returns",
+        "body": "Return or replace within a week of delivery."
+      },
+      "sellers": {
+        "title": "Verified sellers",
+        "body": "Every seller passes PAN and bank checks."
+      },
+      "payments": {
+        "title": "Safe payments",
+        "body": "UPI, cards and cash on delivery."
+      },
+      "local": {
+        "title": "Made in India picks",
+        "body": "Local brands get a spotlight of their own."
+      }
+    }
   },
   "status": {
     "ok": "Working",
@@ -109,6 +212,23 @@
     "errors": {
       "generic": "Something went wrong. Try again.",
       "google": "Google sign-in did not finish. Try again or use your mobile number."
+    },
+    "frame": {
+      "eyebrow": "Welcome to Siliconics",
+      "title": "One account. Rewards on every order.",
+      "footnote": "Your number is only used to sign you in and send order updates.",
+      "rewards": {
+        "title": "Earn Electrons",
+        "body": "1 Electron = ₹1 off your next order."
+      },
+      "launches": {
+        "title": "Launch-day deals",
+        "body": "Electra members get new launches at up to 80% off."
+      },
+      "returns": {
+        "title": "7-day returns",
+        "body": "Return or replace within a week of delivery."
+      }
     }
   },
   "menu": {

@@ -27,7 +27,7 @@ export function AccountMenu() {
     return (
       <Link
         href="/auth/sign-in"
-        className="ml-1 hidden rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-ink sm:inline-block"
+        className="bg-brand-gradient ml-1 hidden rounded-full px-4 py-2 text-sm font-semibold text-white shadow-card transition hover:brightness-110 sm:inline-block"
       >
         {t("signIn")}
       </Link>
@@ -59,14 +59,14 @@ export function AccountMenu() {
 
   return (
     <details ref={menu} className="relative ml-1">
-      <summary className="flex min-h-10 cursor-pointer list-none items-center gap-2 rounded-full border border-line px-3 text-sm font-medium">
+      <summary className="ml-1 flex min-h-10 cursor-pointer list-none items-center gap-2 rounded-full border border-line bg-surface px-3 text-sm font-medium transition hover:border-brand/40 hover:shadow-card">
         <Icon name="user" size={18} />
         <span className="hidden max-w-32 truncate sm:inline">{account.name || tr(account.role)}</span>
         {account.role === "ADMIN" && account.actingRole && (
           <span className="rounded-full bg-warning px-2 text-xs font-semibold text-ink">{tr(role)}</span>
         )}
       </summary>
-      <div className="absolute right-0 z-50 mt-2 w-64 rounded-xl border border-line bg-surface p-2 shadow-lg">
+      <div className="menu-panel absolute right-0 z-50 mt-2 w-64 rounded-2xl border border-line bg-elevated p-2 shadow-lift">
         <p className="px-3 py-2 text-sm text-muted">{t("signedInAs", { role: tr(account.role) })}</p>
         <Link href="/account" onClick={close} className="block rounded-lg px-3 py-2 text-sm hover:bg-bg">
           {t("account")}

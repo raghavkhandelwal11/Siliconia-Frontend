@@ -63,7 +63,7 @@ export function MfaForm() {
   const enrolled = status.data?.enrolled ?? false;
   const needsSetup = status.isSuccess && !enrolled && !setup;
   return (
-    <Card className="mx-auto max-w-md">
+    <Card className="mx-auto w-full max-w-md">
       <h1 className="text-2xl font-bold">{t("title")}</h1>
       {error && (
         <div className="mt-4">
