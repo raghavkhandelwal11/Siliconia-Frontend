@@ -7,6 +7,7 @@ import { Gallery } from "@/components/pdp/Gallery";
 import { BuyBox } from "@/components/pdp/BuyBox";
 import { MainSpecs, SpecTable } from "@/components/pdp/Specs";
 import { ProductRail } from "@/components/listing/ProductRail";
+import { ProductCommunity } from "@/components/m4/ProductCommunity";
 import { Alert } from "@/components/ui/Form";
 import { Icon } from "@/components/ui/Icon";
 
@@ -151,6 +152,7 @@ export default async function Page({ params }: Props) {
         <p className="mt-1 text-muted">{t("reviewsSoon")}</p>
       </section>
 
+      <ProductCommunity productId={p.id} />
       <ProductRail title={t("similar")} items={similar} href={`/c/${p.category.slug}`} />
     </article>
   );
