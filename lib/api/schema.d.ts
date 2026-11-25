@@ -360,6 +360,132 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/seller/application": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The seller's onboarding application (created on first visit) */
+        get: operations["getSellerApplication"];
+        /**
+         * Save business details and pickup address (draft or rejected only)
+         * @description Changing the legal name clears the PAN and bank checks.
+         */
+        put: operations["saveSellerBusiness"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/application/pan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify the PAN against the legal name (KYC provider; 10 checks an hour) */
+        post: operations["checkSellerPan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/application/bank": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Penny-drop the payout account against the legal name */
+        post: operations["checkSellerBank"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/application/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit a complete application for review */
+        post: operations["submitSellerApplication"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/approvals/sellers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Seller approval queue (UI-ADM-02) */
+        get: operations["listSellerApplications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/approvals/sellers/{accountId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One application with KYC results (PAN and bank masked) */
+        get: operations["getSellerApplicationForReview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/approvals/sellers/{accountId}/decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Approve or reject; audited, and the seller gets an SMS
+         * @description Blocked while the admin is viewing as another role. A rejection needs a reason of at least 10 characters.
+         */
+        post: operations["decideSellerApplication"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -429,6 +555,74 @@ export interface components {
             filter?: boolean;
             /** @description Shown in main specifications (at most 3) */
             main?: boolean;
+        };
+        /** @enum {string} */
+        BusinessType: "INDIVIDUAL" | "PROPRIETORSHIP" | "PARTNERSHIP" | "LLP" | "PRIVATE_LIMITED" | "PUBLIC_LIMITED";
+        Address: {
+            line1?: string;
+            line2?: string;
+            city?: string;
+            state?: string;
+            pincode?: string;
+            phone?: string;
+        };
+        KycCheck: {
+            /** @enum {string} */
+            status: "VERIFIED" | "FAILED" | "NAME_MISMATCH";
+            reason?: string;
+            nameMatch: number;
+            /** Format: date-time */
+            checkedAt: string;
+        };
+        SellerApplication: {
+            /** Format: uuid */
+            accountId: string;
+            /** @enum {string} */
+            approval: "DRAFT" | "SUBMITTED" | "UNDER_REVIEW" | "APPROVED" | "REJECTED" | "SUSPENDED";
+            /** @description Admin's reason for the last decision */
+            reason?: string;
+            editable: boolean;
+            phoneVerified: boolean;
+            businessType?: components["schemas"]["BusinessType"];
+            legalName: string;
+            storeName: string;
+            gstin?: string;
+            gstinRequired: boolean;
+            panLast4?: string;
+            panVerified: boolean;
+            bankLast4?: string;
+            ifsc?: string;
+            bankVerified: boolean;
+            pickupAddress?: components["schemas"]["Address"];
+            panCheck?: components["schemas"]["KycCheck"];
+            bankCheck?: components["schemas"]["KycCheck"];
+            /** Format: date-time */
+            submittedAt?: string;
+            /** Format: date-time */
+            decidedAt?: string;
+            termsVersion: string;
+            /** @description Steps still to do */
+            missing: ("phone" | "business" | "pan" | "gstin" | "bank" | "pickup")[];
+        };
+        SellerReview: components["schemas"]["SellerApplication"] & {
+            phone?: string;
+            gstinMatchesPan: boolean;
+        };
+        SellerQueueItem: {
+            /** Format: uuid */
+            accountId: string;
+            approval: string;
+            businessType?: components["schemas"]["BusinessType"];
+            legalName: string;
+            storeName: string;
+            phone?: string;
+            panVerified: boolean;
+            bankVerified: boolean;
+            hasGstin: boolean;
+            /** Format: date-time */
+            submittedAt?: string;
+            /** Format: date-time */
+            decidedAt?: string;
         };
         Health: {
             /** @enum {string} */
@@ -1067,6 +1261,256 @@ export interface operations {
                 content?: never;
             };
             404: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getSellerApplication: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SellerApplication"];
+                };
+            };
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    saveSellerBusiness: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    businessType?: components["schemas"]["BusinessType"];
+                    legalName?: string;
+                    storeName?: string;
+                    gstin?: string;
+                    pickupAddress?: components["schemas"]["Address"];
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SellerApplication"];
+                };
+            };
+            400: components["responses"]["Error"];
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            422: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    checkSellerPan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example ABCDE1234F */
+                    pan: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SellerApplication"];
+                };
+            };
+            400: components["responses"]["Error"];
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            422: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+            503: components["responses"]["Error"];
+        };
+    };
+    checkSellerBank: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    account: string;
+                    ifsc: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SellerApplication"];
+                };
+            };
+            400: components["responses"]["Error"];
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            422: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+            503: components["responses"]["Error"];
+        };
+    };
+    submitSellerApplication: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    acceptTerms: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SellerApplication"];
+                };
+            };
+            400: components["responses"]["Error"];
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            422: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    listSellerApplications: {
+        parameters: {
+            query?: {
+                status?: "pending" | "approved" | "rejected" | "draft";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Applications, oldest submission first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        applications: components["schemas"]["SellerQueueItem"][];
+                    };
+                };
+            };
+            400: components["responses"]["Error"];
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getSellerApplicationForReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SellerReview"];
+                };
+            };
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    decideSellerApplication: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    decision: "APPROVE" | "REJECT";
+                    reason?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SellerReview"];
+                };
+            };
+            400: components["responses"]["Error"];
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
             429: components["responses"]["RateLimited"];
         };
     };
