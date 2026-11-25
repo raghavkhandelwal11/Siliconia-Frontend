@@ -801,6 +801,146 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/addresses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The buyer's saved delivery addresses (default first, at most 10) */
+        get: operations["listAddresses"];
+        put?: never;
+        /** Save an address; the first one (or one marked default) becomes the default */
+        post: operations["createAddress"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/addresses/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        /** Change an address (past orders keep their snapshot) */
+        put: operations["updateAddress"];
+        post?: never;
+        /** Delete an address */
+        delete: operations["deleteAddress"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/checkout/quote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Price the cart for an address and pay method (UI-BUY-02)
+         * @description Re-prices every line from live data. Send the returned `quoteHash` with POST /orders; if prices,
+         *     stock, address or pay method change in between, placing the order fails with QUOTE_CHANGED.
+         *     Shipping is free in the prototype. COD is offered up to `codLimitPaise`.
+         */
+        post: operations["quoteCheckout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The buyer's orders, newest first */
+        get: operations["listOrders"];
+        put?: never;
+        /**
+         * Place the order from the cart (UI-BUY-03)
+         * @description Reserves stock in the same transaction (never oversells) and clears the cart. COD orders are CONFIRMED
+         *     at once. ONLINE orders wait in PENDING_PAYMENT for `checkout.hold_minutes` (10) with
+         *     `payment.checkoutUrl` to the payment page; unpaid orders expire and release their stock, and a payment
+         *     that arrives after expiry is refunded in full. The same Idempotency-Key returns the same order.
+         */
+        post: operations["placeOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/orders/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One of the buyer's orders */
+        get: operations["getOrder"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/orders/{id}/pay": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get the payment page again for an order waiting for payment */
+        post: operations["payOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/webhooks/payment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Payment provider events (sim-pay), signed with X-Sim-Signature
+         * @description `X-Sim-Signature: t=<unix>,v1=<hex HMAC-SHA256(secret, t + "." + body)>`, rejected beyond 5 minutes.
+         *     Events are de-duplicated on their id and applied in the same transaction; 200 means stored and applied.
+         *     Types: payment.captured, payment.failed, refund.processed, refund.failed, mandate.active, mandate.failed, mandate.revoked.
+         */
+        post: operations["paymentWebhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1287,6 +1427,142 @@ export interface components {
             code: string;
             detail?: string;
             requestId?: string;
+        };
+        AddressInput: {
+            name: string;
+            /** @description Indian mobile number; +91 and spaces are ignored */
+            phone: string;
+            line1: string;
+            line2?: string;
+            city: string;
+            state: string;
+            pincode: string;
+            isDefault?: boolean;
+        };
+        DeliveryAddress: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            phone: string;
+            line1: string;
+            line2: string;
+            city: string;
+            state: string;
+            pincode: string;
+            isDefault: boolean;
+        };
+        QuoteLine: {
+            /** Format: uuid */
+            variantId: string;
+            name: string;
+            slug: string;
+            coverUrl?: string;
+            attrs: {
+                [key: string]: string;
+            };
+            qty: number;
+            /** Format: int64 */
+            unitPricePaise: number;
+            /** Format: int64 */
+            unitMrpPaise: number;
+            /** Format: int64 */
+            lineTotalPaise: number;
+            /** @enum {string} */
+            problem?: "UNAVAILABLE" | "OUT_OF_STOCK" | "LOW_STOCK";
+        };
+        Quote: {
+            groups: {
+                storeName: string;
+                lines: components["schemas"]["QuoteLine"][];
+                /** Format: int64 */
+                subtotalPaise: number;
+            }[];
+            itemCount: number;
+            /** Format: int64 */
+            itemTotalPaise: number;
+            /** Format: int64 */
+            mrpTotalPaise: number;
+            /** Format: int64 */
+            savingsPaise: number;
+            /** Format: int64 */
+            shippingPaise: number;
+            /** Format: int64 */
+            payablePaise: number;
+            codEligible: boolean;
+            /** Format: int64 */
+            codLimitPaise: number;
+            electronsNonMember: number;
+            electronsMember: number;
+            quoteHash: string;
+            canPlace: boolean;
+            address?: components["schemas"]["DeliveryAddress"];
+        };
+        OrderItem: {
+            name: string;
+            slug: string;
+            coverUrl?: string;
+            attrs: {
+                [key: string]: string;
+            };
+            qty: number;
+            /** Format: int64 */
+            unitPricePaise: number;
+            /** Format: int64 */
+            unitMrpPaise: number;
+            /** Format: int64 */
+            lineTotalPaise: number;
+        };
+        Order: {
+            /** Format: uuid */
+            id: string;
+            /** @example SX-261125-K7Q2M */
+            number: string;
+            /** @enum {string} */
+            status: "PENDING_PAYMENT" | "CONFIRMED" | "EXPIRED" | "CLOSED";
+            /** @enum {string} */
+            payMethod: "ONLINE" | "COD" | "ELECTRONS_ONLY";
+            /** Format: date-time */
+            placedAt: string;
+            /** Format: date-time */
+            expiresAt: string;
+            address: components["schemas"]["DeliveryAddress"];
+            /** Format: int64 */
+            itemTotalPaise: number;
+            /** Format: int64 */
+            mrpTotalPaise: number;
+            /** Format: int64 */
+            shippingPaise: number;
+            /** Format: int64 */
+            payablePaise: number;
+            subOrders: {
+                /** Format: uuid */
+                id: string;
+                storeName: string;
+                /** @enum {string} */
+                status: "PENDING_PAYMENT" | "CONFIRMED" | "PACKED" | "SHIPPED" | "OUT_FOR_DELIVERY" | "DELIVERED" | "EXPIRED" | "CANCELLED" | "RTO";
+                /** Format: int64 */
+                subtotalPaise: number;
+                items: components["schemas"]["OrderItem"][];
+            }[];
+            payment?: {
+                /** @enum {string} */
+                status: "CREATED" | "PENDING" | "CAPTURED" | "FAILED" | "EXPIRED";
+                failureCode?: string;
+                /** @description Present while the order can still be paid */
+                checkoutUrl?: string;
+            };
+        };
+        OrderSummary: {
+            /** Format: uuid */
+            id: string;
+            number: string;
+            status: string;
+            /** Format: int64 */
+            payablePaise: number;
+            /** Format: date-time */
+            placedAt: string;
+            itemCount: number;
+            coverUrl?: string;
         };
     };
     responses: {
@@ -2769,6 +3045,293 @@ export interface operations {
             401: components["responses"]["Error"];
             403: components["responses"]["Error"];
             429: components["responses"]["RateLimited"];
+        };
+    };
+    listAddresses: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Addresses */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: components["schemas"]["DeliveryAddress"][];
+                        max: number;
+                    };
+                };
+            };
+            401: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+        };
+    };
+    createAddress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddressInput"];
+            };
+        };
+        responses: {
+            /** @description Saved */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeliveryAddress"];
+                };
+            };
+            400: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+        };
+    };
+    updateAddress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddressInput"];
+            };
+        };
+        responses: {
+            /** @description Saved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeliveryAddress"];
+                };
+            };
+            400: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+        };
+    };
+    deleteAddress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            404: components["responses"]["Error"];
+        };
+    };
+    quoteCheckout: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    addressId?: string;
+                    /** @enum {string} */
+                    payMethod?: "ONLINE" | "COD";
+                };
+            };
+        };
+        responses: {
+            /** @description The quote */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Quote"];
+                };
+            };
+            400: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+        };
+    };
+    listOrders: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Orders */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: components["schemas"]["OrderSummary"][];
+                    };
+                };
+            };
+            403: components["responses"]["Error"];
+        };
+    };
+    placeOrder: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    addressId: string;
+                    /** @enum {string} */
+                    payMethod: "ONLINE" | "COD";
+                    quoteHash: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Placed (or the earlier result for this key) */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Order"];
+                };
+            };
+            400: components["responses"]["Error"];
+            403: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            422: components["responses"]["Error"];
+        };
+    };
+    getOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The order */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Order"];
+                };
+            };
+            404: components["responses"]["Error"];
+        };
+    };
+    payOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Where to pay */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        checkoutUrl: string;
+                    };
+                };
+            };
+            404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+        };
+    };
+    paymentWebhook: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Sim-Signature": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    id: string;
+                    type: string;
+                    created?: number;
+                    data: {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+        responses: {
+            /** @description Applied (or already applied) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad signature or malformed event */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            429: components["responses"]["RateLimited"];
+            /** @description Not applied; the provider retries */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
 }

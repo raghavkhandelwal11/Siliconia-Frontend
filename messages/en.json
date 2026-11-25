@@ -277,6 +277,12 @@
     "errors": {
       "save": "Could not save. Try again.",
       "revoke": "Could not sign out that device."
+    },
+    "shortcuts": "Shortcuts",
+    "links": {
+      "orders": "Your orders",
+      "addresses": "Saved addresses",
+      "wishlist": "Wishlist"
     }
   },
   "categories": {
@@ -744,7 +750,6 @@
     "electronsMin": "Orders from ₹2,500 earn Electrons.",
     "electronsMember": "Members earn {n}.",
     "checkout": "Proceed to checkout",
-    "checkoutSoon": "Checkout opens in the next update.",
     "fixProblems": "Fix the items marked above to check out.",
     "priceDown": "Price dropped by {amount} since you added it",
     "priceUp": "Price went up by {amount} since you added it",
@@ -769,5 +774,116 @@
     "addToCart": "Add to cart",
     "remove": "Remove",
     "added": "Added to your cart."
+  },
+  "addresses": {
+    "title": "Saved addresses",
+    "add": "Add an address",
+    "edit": "Edit address",
+    "editShort": "Edit",
+    "delete": "Delete",
+    "deleteFor": "Delete the address for {name}",
+    "default": "Default",
+    "empty": "No saved addresses yet.",
+    "name": "Full name",
+    "phone": "Mobile number",
+    "line1": "House, building, street",
+    "line2": "Area, landmark (optional)",
+    "pincode": "PIN code",
+    "city": "City",
+    "state": "State",
+    "chooseState": "Choose a state",
+    "makeDefault": "Use as my default address",
+    "save": "Save address",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "errors": {
+      "name": "Enter the full name (at least 2 letters).",
+      "phone": "Enter a 10-digit Indian mobile number.",
+      "required": "This is required.",
+      "pincode": "Enter a 6-digit PIN code.",
+      "save": "Could not save the address. Try again.",
+      "load": "Could not load your addresses."
+    }
+  },
+  "checkout": {
+    "title": "Checkout",
+    "deliverTo": "Deliver to",
+    "addAddress": "+ Add a new address",
+    "payWith": "Pay with",
+    "method": {
+      "ONLINE": "UPI, card or net banking",
+      "COD": "Cash on delivery"
+    },
+    "methodHint": {
+      "ONLINE": "Pay securely now. Your order is confirmed instantly.",
+      "COD": "Pay in cash or UPI when it arrives."
+    },
+    "codLimit": "Available for orders up to {amount}.",
+    "review": "Review items",
+    "soldBy": "Sold by {store}",
+    "qty": "× {n}",
+    "problem": {
+      "UNAVAILABLE": "No longer available",
+      "OUT_OF_STOCK": "Out of stock",
+      "LOW_STOCK": "Not enough stock"
+    },
+    "summary": "Order summary",
+    "items": "{n, plural, one {# item} other {# items}}",
+    "savings": "You save",
+    "delivery": "Delivery",
+    "free": "Free",
+    "payable": "To pay",
+    "electrons": "You'll earn {n} Electrons when this order is delivered.",
+    "phoneRequired": "Verify your mobile number so the courier can reach you.",
+    "verifyPhone": "Verify now",
+    "pay": "Pay {amount}",
+    "placeCod": "Place order · {amount}",
+    "placing": "Placing your order…",
+    "placeError": "Could not place the order. Try again.",
+    "fixCart": "Some items need attention.",
+    "backToCart": "Back to cart",
+    "terms": "By placing the order you agree to the Siliconics terms and returns policy.",
+    "emptyTitle": "Nothing to check out",
+    "emptyBody": "Your cart is empty.",
+    "browse": "Browse categories",
+    "loadError": "Could not load checkout. Refresh to try again."
+  },
+  "orderResult": {
+    "missing": "No order was given.",
+    "loadError": "Could not load the order. Refresh to try again.",
+    "confirmedTitle": "Order confirmed",
+    "confirmedPaid": "Payment received. The sellers are preparing your items.",
+    "confirmedCod": "Keep {amount} ready to pay on delivery. The sellers are preparing your items.",
+    "waitingTitle": "Confirming your payment",
+    "waitingBody": "This usually takes a few seconds. You can keep this page open.",
+    "failedTitle": "Payment didn't go through",
+    "failedBody": "No money was taken. Your items are held so you can try again.",
+    "expiredTitle": "Order expired",
+    "expiredBody": "The payment wasn't completed in time, so the items were released. If money was taken, it is refunded automatically.",
+    "number": "Order",
+    "heldFor": "Items held for {time}",
+    "retry": "Try payment again",
+    "continuePayment": "Continue to payment",
+    "retryError": "Could not open the payment page.",
+    "keepShopping": "Keep shopping",
+    "details": "Order details",
+    "total": "Paid",
+    "payOnDelivery": "Pay on delivery",
+    "deliverTo": "Delivering to {name}:",
+    "amount": "Order total",
+    "shopAgain": "Buy it again"
+  },
+  "orders": {
+    "title": "Your orders",
+    "empty": "You haven't placed any orders yet.",
+    "browse": "Start shopping",
+    "loadError": "Could not load your orders.",
+    "items": "{n, plural, one {# item} other {# items}}",
+    "status": {
+      "PENDING_PAYMENT": "Awaiting payment",
+      "CONFIRMED": "Confirmed",
+      "EXPIRED": "Expired",
+      "CLOSED": "Closed"
+    }
   }
 }
