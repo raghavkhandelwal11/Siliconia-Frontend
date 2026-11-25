@@ -18,7 +18,7 @@ describe("AppShell", () => {
   it("has a skip link, a search box and a main landmark", () => {
     renderWithProviders(<AppShell testMode>content</AppShell>);
     expect(screen.getByRole("link", { name: "Skip to main content" })).toHaveAttribute("href", "#main");
-    expect(screen.getByRole("searchbox", { name: "Search products" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Search products" })).toBeInTheDocument();
     expect(screen.getByRole("main")).toHaveTextContent("content");
   });
 });

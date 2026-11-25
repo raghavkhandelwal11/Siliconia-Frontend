@@ -5,6 +5,7 @@ import { AccountMenu } from "@/components/auth/AccountMenu";
 import { CategoryMenu } from "@/components/catalogue/CategoryMenu";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
+import { SearchBox } from "@/components/listing/SearchBox";
 
 // UI-GLB-01/02: logo, categories, search, theme, wishlist, notifications, cart
 // and account. Sticky frosted glass so content scrolls softly underneath.
@@ -17,24 +18,7 @@ export function Header() {
       <div className="mx-auto flex max-w-6xl items-center gap-2 px-4 py-2.5 sm:gap-3">
         <Logo label={t("app.name")} />
         <CategoryMenu />
-        <form role="search" action="/search" className="group mx-1 flex min-w-0 flex-1 sm:mx-2">
-          <label htmlFor="site-search" className="sr-only">
-            {t("shell.search")}
-          </label>
-          <div className="flex w-full items-center rounded-full border border-line bg-bg px-3 transition focus-within:border-brand focus-within:bg-surface focus-within:shadow-card">
-            <Icon name="search" size={18} className="shrink-0 text-muted" />
-            <input
-              id="site-search"
-              name="q"
-              type="search"
-              placeholder={t("shell.searchPlaceholder")}
-              className="min-w-0 flex-1 bg-transparent px-2 py-2 text-sm outline-none"
-            />
-          </div>
-          <button type="submit" className="sr-only">
-            {t("shell.search")}
-          </button>
-        </form>
+        <SearchBox />
         <nav aria-label={t("shell.mainNav")} className="flex items-center gap-0.5">
           <ThemeToggle className="hidden md:inline-flex" />
           <Link

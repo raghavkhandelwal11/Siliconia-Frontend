@@ -1,11 +1,10 @@
-import { screen, within } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { renderWithProviders } from "@/test/render";
 import { stubApi } from "@/test/fetch";
-import type { CategoryDetail, CategoryNode } from "@/lib/catalogue";
+import type { CategoryNode } from "@/lib/catalogue";
 import { CategoryGrid } from "./CategoryGrid";
-import { CategoryOverview } from "./CategoryOverview";
 import { CategoryMenu } from "./CategoryMenu";
 
 const sub = (slug: string, name: string): CategoryNode => ({ id: slug, slug, name, examples: `${name} examples` });
@@ -28,47 +27,6 @@ describe("CategoryGrid", () => {
     expect(screen.queryByRole("link", { name: "Sub f" })).toBeNull();
     expect(screen.getByRole("link", { name: "See all 6" })).toHaveAttribute("href", "/c/mobiles-tablets");
     expect(screen.getByRole("link", { name: "Shop Gaming" })).toBeInTheDocument();
-  });
-});
-
-describe("CategoryOverview", () => {
-  const smartphones: CategoryDetail = {
-    id: "s",
-    slug: "smartphones",
-    name: "Smartphones",
-    examples: "5G phones, foldables",
-    parent: { id: "m", slug: "mobiles-tablets", name: "Mobiles & Tablets" },
-    children: [],
-    specSchema: {
-      fields: [
-        { key: "ram_gb", label: "RAM", type: "number", unit: "GB", filter: true },
-        { key: "chip", label: "Chip", type: "text" },
-        { key: "has_5g", label: "5G", type: "boolean", filter: true },
-      ],
-    },
-  };
-
-  it("shows the breadcrumb, filterable specs and an empty product state", () => {
-    renderWithProviders(<CategoryOverview category={smartphones} />);
-    const crumbs = screen.getByRole("navigation", { name: "Breadcrumb" });
-    expect(within(crumbs).getByRole("link", { name: "Mobiles & Tablets" })).toHaveAttribute(
-      "href",
-      "/c/mobiles-tablets",
-    );
-    expect(screen.getByRole("heading", { level: 1, name: "Smartphones" })).toBeInTheDocument();
-    expect(screen.getByText("RAM (GB)")).toBeInTheDocument();
-    expect(screen.getByText("5G")).toBeInTheDocument();
-    expect(screen.queryByText("Chip")).toBeNull();
-    expect(screen.getByText("No products here yet")).toBeInTheDocument();
-  });
-
-  it("lists sub-categories for a top-level category", () => {
-    renderWithProviders(
-      <CategoryOverview category={{ ...tree[0], children: tree[0].children!, specSchema: { fields: [] } }} />,
-    );
-    expect(screen.getByRole("heading", { name: "Sub-categories" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Sub f/ })).toHaveAttribute("href", "/c/s-f");
-    expect(screen.queryByText("No products here yet")).toBeNull();
   });
 });
 

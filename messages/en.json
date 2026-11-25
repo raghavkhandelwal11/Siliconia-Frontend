@@ -576,5 +576,66 @@
         }
       }
     }
+  },
+  "listing": {
+    "count": "{n, plural, =0 {No products} one {# product} other {# products}}",
+    "filters": "Filters",
+    "sortBy": "Sort by",
+    "sort": {
+      "relevance": "Relevance",
+      "price_asc": "Price: low to high",
+      "price_desc": "Price: high to low",
+      "newest": "Newest",
+      "rating": "Top rated",
+      "popular": "Most popular"
+    },
+    "activeFilters": "Active filters",
+    "removeFilter": "Remove filter {filter}",
+    "clearAll": "Clear all",
+    "close": "Close",
+    "showResults": "Show {n, plural, one {# result} other {# results}}",
+    "emptyTitle": "Nothing matches yet",
+    "emptyBody": "Try fewer filters or a different search. New products arrive every week.",
+    "browse": "Browse categories",
+    "showing": "Showing {shown} of {total}",
+    "loadMore": "Load more",
+    "loading": "Loading…",
+    "loadError": "Could not load products. Try again.",
+    "category": "Category",
+    "brand": "Brand",
+    "price": "Price",
+    "min": "Min",
+    "max": "Max",
+    "apply": "Apply price",
+    "applyFilter": "Apply {filter}",
+    "more": "More filters",
+    "inStock": "In stock",
+    "local": "Made in India",
+    "verified": "Verified sellers",
+    "rating4": "4★ and up",
+    "yesOnly": "Yes",
+    "yes": "Yes",
+    "no": "No",
+    "from": "From {price}",
+    "upTo": "Up to {price}",
+    "resultsFor": "Results for “{q}”",
+    "searchTitle": "Search",
+    "allProducts": "All products",
+    "card": {
+      "local": "Made in India",
+      "outOfStock": "Out of stock",
+      "verified": "Verified seller"
+    },
+    "searchBox": {
+      "label": "Search products",
+      "placeholder": "Search phones, laptops, tools…",
+      "suggestions": "Suggestions",
+      "kind": {
+        "product": "Product",
+        "brand": "Brand",
+        "category": "Category",
+        "recent": "Recent"
+      }
+    }
   }
 }
