@@ -846,7 +846,10 @@
     "emptyTitle": "Nothing to check out",
     "emptyBody": "Your cart is empty.",
     "browse": "Browse categories",
-    "loadError": "Could not load checkout. Refresh to try again."
+    "loadError": "Could not load checkout. Refresh to try again.",
+    "codPin": "Not available for this PIN code. Pay online instead.",
+    "arrives": "Arrives by",
+    "notServed": "We don't deliver to this address yet. Choose or add another address."
   },
   "orderResult": {
     "missing": "No order was given.",
@@ -871,7 +874,11 @@
     "payOnDelivery": "Pay on delivery",
     "deliverTo": "Delivering to {name}:",
     "amount": "Order total",
-    "shopAgain": "Buy it again"
+    "shopAgain": "Buy it again",
+    "onTheWayTitle": "On its way",
+    "onTheWayBody": "Your order has shipped. Tracking updates appear below.",
+    "deliveredTitle": "Delivered",
+    "deliveredBody": "Enjoy your purchase. You can return items within 7 days of delivery."
   },
   "orders": {
     "title": "Your orders",
@@ -884,6 +891,40 @@
       "CONFIRMED": "Confirmed",
       "EXPIRED": "Expired",
       "CLOSED": "Closed"
+    }
+  },
+  "shipping": {
+    "pinLabel": "PIN code for delivery",
+    "pinPlaceholder": "Enter PIN code to check delivery",
+    "check": "Check",
+    "invalid": "Enter a 6-digit PIN code.",
+    "unavailable": "Couldn't check right now. Try again in a minute.",
+    "deliveryBy": "Delivery by {date}",
+    "codAvailable": "Cash on delivery available",
+    "prepaidOnly": "Prepaid only for this PIN code",
+    "notServed": "We don't deliver to this PIN code yet",
+    "progress": "Delivery progress",
+    "current": "current step",
+    "step": {
+      "CONFIRMED": "Confirmed",
+      "SHIPPED": "Shipped",
+      "OUT_FOR_DELIVERY": "Out for delivery",
+      "DELIVERED": "Delivered"
+    },
+    "awb": "{courier} · AWB {awb}",
+    "eta": "Expected {date}",
+    "scans": "{n, plural, one {# tracking update} other {# tracking updates}}",
+    "rto": "The courier couldn't deliver this parcel and returned it to the seller. If you paid online, a refund follows.",
+    "scan": {
+      "MANIFESTED": "Shipment booked",
+      "PICKED_UP": "Picked up",
+      "IN_TRANSIT": "In transit",
+      "OUT_FOR_DELIVERY": "Out for delivery",
+      "FAILED_ATTEMPT": "Delivery attempt failed",
+      "DELIVERED": "Delivered",
+      "RTO_INITIATED": "Returning to seller",
+      "RTO_DELIVERED": "Returned to seller",
+      "CANCELLED": "Shipment cancelled"
     }
   }
 }

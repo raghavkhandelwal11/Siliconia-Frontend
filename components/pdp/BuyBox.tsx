@@ -9,6 +9,7 @@ import { api, ApiError, unwrap } from "@/lib/api/client";
 import { qtyInCart, setSaved, useCart, useSetQty, wishlistKey } from "@/lib/cart";
 import { optionGroups, pickVariant, type ProductPage } from "@/lib/pdp";
 import { buttonClass } from "@/components/ui/Form";
+import { PinCheck } from "@/components/shipping/PinCheck";
 import { Icon, type IconName } from "@/components/ui/Icon";
 
 const inr = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
@@ -165,6 +166,8 @@ export function BuyBox({ product }: { product: ProductPage }) {
           );
         })}
       </div>
+
+      <PinCheck />
 
       <ul className="grid gap-2 text-sm sm:grid-cols-2">
         {(["returns", "delivery"] as const).map((k) => (

@@ -919,6 +919,82 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/serviceability/{pincode}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Can we deliver to this PIN code, with COD, and how fast (sim-ship) */
+        get: operations["checkServiceability"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/sub-orders/{id}/ship": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Book the courier for a confirmed sub-order (AWB and label); moves it to SHIPPED
+         * @description Idempotent; calling it again returns the same shipment. COD orders collect the sub-order total.
+         */
+        post: operations["shipSubOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/seller/sub-orders/{id}/label": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The 4×6 inch shipping label (PDF) */
+        get: operations["getShippingLabel"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/webhooks/shipping": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Tracking scans from the courier (sim-ship), signed with X-Sim-Signature
+         * @description Type `shipment.status` with data {awb, ref, kind, status, location, at, eta}. Statuses: MANIFESTED, PICKED_UP,
+         *     IN_TRANSIT, OUT_FOR_DELIVERY, FAILED_ATTEMPT, DELIVERED, RTO_INITIATED, RTO_DELIVERED, CANCELLED.
+         *     De-duplicated on the event id; scans older than the last one are recorded but do not change the status.
+         */
+        post: operations["shippingWebhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/webhooks/payment": {
         parameters: {
             query?: never;
@@ -1491,6 +1567,17 @@ export interface components {
             codEligible: boolean;
             /** Format: int64 */
             codLimitPaise: number;
+            /**
+             * @description Why cash on delivery is not offered
+             * @enum {string}
+             */
+            codReason?: "OVER_LIMIT" | "PIN_NO_COD";
+            delivery?: {
+                deliverable: boolean;
+                etaDays?: number;
+                /** Format: date-time */
+                estimatedBy?: string;
+            };
             electronsNonMember: number;
             electronsMember: number;
             quoteHash: string;
@@ -1543,6 +1630,23 @@ export interface components {
                 /** Format: int64 */
                 subtotalPaise: number;
                 items: components["schemas"]["OrderItem"][];
+                /** Format: date-time */
+                deliveredAt?: string;
+                /** Format: date-time */
+                returnWindowEndsAt?: string;
+                shipment?: {
+                    awb: string;
+                    courier: string;
+                    status: string;
+                    /** Format: date-time */
+                    eta?: string;
+                    events: {
+                        status: string;
+                        location: string;
+                        /** Format: date-time */
+                        at: string;
+                    }[];
+                };
             }[];
             payment?: {
                 /** @enum {string} */
@@ -1563,6 +1667,21 @@ export interface components {
             placedAt: string;
             itemCount: number;
             coverUrl?: string;
+        };
+        Serviceability: {
+            pincode: string;
+            deliverable: boolean;
+            cod: boolean;
+            etaDays: number;
+        };
+        Shipment: {
+            awb: string;
+            status: string;
+            /** Format: date-time */
+            eta?: string;
+            /** Format: int64 */
+            codAmountPaise: number;
+            courier: string;
         };
     };
     responses: {
@@ -3286,6 +3405,130 @@ export interface operations {
             };
             404: components["responses"]["Error"];
             409: components["responses"]["Error"];
+        };
+    };
+    checkServiceability: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                pincode: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Serviceability */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Serviceability"];
+                };
+            };
+            400: components["responses"]["Error"];
+            503: components["responses"]["Error"];
+        };
+    };
+    shipSubOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    weightGrams?: number;
+                };
+            };
+        };
+        responses: {
+            /** @description The shipment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Shipment"];
+                };
+            };
+            403: components["responses"]["Error"];
+            404: components["responses"]["Error"];
+            409: components["responses"]["Error"];
+            503: components["responses"]["Error"];
+        };
+    };
+    getShippingLabel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Label */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                };
+            };
+            404: components["responses"]["Error"];
+        };
+    };
+    shippingWebhook: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Sim-Signature": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    id: string;
+                    type: string;
+                    created?: number;
+                    data: {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+        responses: {
+            /** @description Applied (or already applied) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad signature or malformed event */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not applied; the courier retries */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     paymentWebhook: {

@@ -8,6 +8,7 @@ import { ApiError } from "@/lib/api/client";
 import { browser, oneLine, restartPayment, rupees, useOrder } from "@/lib/checkout";
 import { Alert, Button, buttonClass } from "@/components/ui/Form";
 import { Icon, type IconName } from "@/components/ui/Icon";
+import { Tracking } from "@/components/shipping/Tracking";
 
 // UI-BUY-04: where the payment page returns to. Polls until the payment
 // webhook confirms the order, or offers a retry while the order is held.
@@ -24,21 +25,27 @@ export function ResultPage() {
   if (order.isError || !order.data) return <Alert>{t("loadError")}</Alert>;
   const o = order.data;
   const failed = o.status === "PENDING_PAYMENT" && o.payment?.status === "FAILED";
+  const delivered = o.subOrders.length > 0 && o.subOrders.every((s) => s.status === "DELIVERED");
+  const moving = o.subOrders.some((s) => ["SHIPPED", "OUT_FOR_DELIVERY", "DELIVERED"].includes(s.status));
   const left = Math.max(0, Math.floor((new Date(o.expiresAt).getTime() - now) / 1000));
 
   const view: { icon: IconName; hue: number; title: string; body: string } =
-    o.status === "CONFIRMED"
-      ? {
-          icon: "check",
-          hue: 150,
-          title: t("confirmedTitle"),
-          body: o.payMethod === "COD" ? t("confirmedCod", { amount: rupees(o.payablePaise) }) : t("confirmedPaid"),
-        }
-      : o.status === "EXPIRED"
-        ? { icon: "clock", hue: 25, title: t("expiredTitle"), body: t("expiredBody") }
-        : failed
-          ? { icon: "alert", hue: 25, title: t("failedTitle"), body: t("failedBody") }
-          : { icon: "clock", hue: 248, title: t("waitingTitle"), body: t("waitingBody") };
+    o.status === "CONFIRMED" && delivered
+      ? { icon: "check", hue: 150, title: t("deliveredTitle"), body: t("deliveredBody") }
+      : o.status === "CONFIRMED" && moving
+        ? { icon: "truck", hue: 200, title: t("onTheWayTitle"), body: t("onTheWayBody") }
+        : o.status === "CONFIRMED"
+          ? {
+              icon: "check",
+              hue: 150,
+              title: t("confirmedTitle"),
+              body: o.payMethod === "COD" ? t("confirmedCod", { amount: rupees(o.payablePaise) }) : t("confirmedPaid"),
+            }
+          : o.status === "EXPIRED"
+            ? { icon: "clock", hue: 25, title: t("expiredTitle"), body: t("expiredBody") }
+            : failed
+              ? { icon: "alert", hue: 25, title: t("failedTitle"), body: t("failedBody") }
+              : { icon: "clock", hue: 248, title: t("waitingTitle"), body: t("waitingBody") };
 
   async function retry() {
     setRetrying(true);
@@ -102,6 +109,11 @@ export function ResultPage() {
               <Icon name="store" size={14} className="text-brand" />
               {s.storeName}
             </p>
+            {o.status === "CONFIRMED" && (
+              <div className="my-2">
+                <Tracking status={s.status} shipment={s.shipment} />
+              </div>
+            )}
             <ul className="mt-1 space-y-1 text-muted">
               {s.items.map((it, i) => (
                 <li key={i} className="flex justify-between gap-3">
