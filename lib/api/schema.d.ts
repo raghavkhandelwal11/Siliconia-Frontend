@@ -656,6 +656,60 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/products/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A live product for its page (static, cacheable for 60 s) */
+        get: operations["getProduct"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/products/{id}/live": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Current price, stock, Electrons and the viewer's actions (never cached)
+         * @description Works signed out; when the session cookie is present the actions follow the viewer's role.
+         */
+        get: operations["getProductLive"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/products/{id}/similar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Up to 8 live products from the same sub-category, closest in price */
+        get: operations["getSimilarProducts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -967,6 +1021,84 @@ export interface components {
             slug?: string;
             coverUrl?: string;
             brand?: string;
+        };
+        ProductPage: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            name: string;
+            brand: string;
+            model: string;
+            description: string;
+            warranty: string;
+            originCountry: string;
+            isLocal: boolean;
+            ratingAvg: number;
+            ratingCount: number;
+            category: {
+                slug: string;
+                name: string;
+                parentSlug?: string;
+                parentName?: string;
+                icon?: string;
+            };
+            seller: {
+                storeName: string;
+                verified: boolean;
+            };
+            specs: {
+                key: string;
+                label: string;
+                value: unknown;
+                unit?: string;
+                main?: boolean;
+            }[];
+            variants: {
+                /** Format: uuid */
+                id: string;
+                sku: string;
+                attrs: {
+                    [key: string]: string;
+                };
+                /** Format: int64 */
+                mrpPaise: number;
+                /** Format: int64 */
+                pricePaise: number;
+            }[];
+            images: {
+                url: string;
+                alt: string;
+                width: number;
+                height: number;
+            }[];
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ProductLive: {
+            variants: {
+                /** Format: uuid */
+                id: string;
+                /** Format: int64 */
+                pricePaise: number;
+                /** Format: int64 */
+                mrpPaise: number;
+                available: number;
+                /** Format: int64 */
+                electronsNonMember: number;
+                /** Format: int64 */
+                electronsMember: number;
+            }[];
+            /** @enum {string} */
+            viewer: "ANONYMOUS" | "BUYER" | "SELLER" | "PROMOTER" | "CREATOR" | "ADMIN";
+            isMember: boolean;
+            actions: {
+                /** @enum {string} */
+                key: "buy_now" | "add_to_cart" | "wishlist" | "edit" | "promote" | "request_demo" | "add_review" | "hide";
+                enabled: boolean;
+                /** @enum {string} */
+                reason?: "SIGN_IN" | "COMING_M2" | "COMING_M3" | "COMING_M4" | "COMING_M5" | "OUT_OF_STOCK" | "OTHER_ROLE";
+                href?: string;
+            }[];
         };
         Health: {
             /** @enum {string} */
@@ -2218,6 +2350,79 @@ export interface operations {
                 content: {
                     "application/json": {
                         suggestions: components["schemas"]["Suggestion"][];
+                    };
+                };
+            };
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getProduct: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Product */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductPage"];
+                };
+            };
+            404: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getProductLive: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Live block */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductLive"];
+                };
+            };
+            404: components["responses"]["Error"];
+            429: components["responses"]["RateLimited"];
+        };
+    };
+    getSimilarProducts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Similar products */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: components["schemas"]["ProductCard"][];
                     };
                 };
             };

@@ -134,6 +134,14 @@
         "title": "Made in India picks",
         "body": "Local brands get a spotlight of their own."
       }
+    },
+    "rails": {
+      "popularEyebrow": "Trending",
+      "popular": "Popular right now",
+      "localEyebrow": "Made in India",
+      "local": "Local picks",
+      "newEyebrow": "Just in",
+      "new": "New arrivals"
     }
   },
   "status": {
@@ -635,6 +643,74 @@
         "brand": "Brand",
         "category": "Category",
         "recent": "Recent"
+      }
+    },
+    "seeAll": "See all"
+  },
+  "pdp": {
+    "loadError": "We could not load this product. Refresh the page.",
+    "breadcrumb": "Breadcrumb",
+    "local": "Made in India",
+    "noReviews": "No reviews yet",
+    "soldBy": "Sold by",
+    "verified": "Verified",
+    "about": "About this product",
+    "specsTitle": "Specifications",
+    "reviewsTitle": "Reviews",
+    "reviewsSoon": "Creator and buyer reviews open with the reviews release. Be the first to review after you buy.",
+    "similar": "Similar products",
+    "notFoundTitle": "This product is not available",
+    "notFoundBody": "It may have been paused by the seller or removed.",
+    "browse": "Browse categories",
+    "gallery": {
+      "photo": "{name}, photo {n}",
+      "previous": "Previous photo",
+      "next": "Next photo",
+      "thumbnails": "Photos",
+      "show": "Show photo {n}"
+    },
+    "specs": {
+      "yes": "Yes",
+      "no": "No",
+      "brand": "Brand",
+      "model": "Model",
+      "warranty": "Warranty",
+      "origin": "Country of origin",
+      "india": "India"
+    },
+    "buy": {
+      "off": "{pct}% off",
+      "inclusive": "Inclusive of all taxes",
+      "outOfStock": "Out of stock",
+      "onlyLeft": "Only {n} left",
+      "inStock": "In stock ({n} available)",
+      "electrons": "Earn {n} Electrons on this order",
+      "electronsMember": "Earn {n} Electrons as an Electra member",
+      "electronsNone": "Orders from ₹2,500 earn Electrons",
+      "electronsUpsell": "Electra members earn {n}.",
+      "electra": "Join Electra",
+      "action": {
+        "buy_now": "Buy now",
+        "add_to_cart": "Add to cart",
+        "wishlist": "Add to wishlist",
+        "edit": "Edit this product",
+        "promote": "Promote this product",
+        "request_demo": "Request a demo unit",
+        "add_review": "Write a review",
+        "hide": "Hide product"
+      },
+      "reason": {
+        "SIGN_IN": "Sign in to buy",
+        "COMING_M2": "Checkout opens with the next release",
+        "COMING_M3": "Launch deals open soon",
+        "COMING_M4": "Opens with the creator and promoter release",
+        "COMING_M5": "Admin tools for products arrive soon",
+        "OUT_OF_STOCK": "Out of stock right now",
+        "OTHER_ROLE": "Sign in with a buyer account to purchase"
+      },
+      "perk": {
+        "returns": "7-day returns",
+        "delivery": "Delivery updates by SMS and WhatsApp"
       }
     }
   }
