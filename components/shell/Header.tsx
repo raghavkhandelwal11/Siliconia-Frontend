@@ -28,7 +28,7 @@ export function Header() {
           >
             {t("shell.journey")}
           </Link>
-          <ThemeToggle className="hidden md:inline-flex" />
+          <ThemeToggle className="inline-flex" /> {/* on every screen size, phones included */}
           <Link
             href="/account/wishlist"
             className={`${iconLink} hidden md:inline-flex`}
