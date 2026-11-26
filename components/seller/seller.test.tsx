@@ -142,3 +142,33 @@ describe("SellerOnboarding", () => {
     );
   });
 });
+
+describe("SellerHome as an admin preview", () => {
+  it("opens read-only with a notice instead of failing", async () => {
+    stubApi([
+      {
+        method: "GET",
+        path: "/me",
+        body: {
+          id: "adm",
+          role: "ADMIN",
+          actingRole: "SELLER",
+          name: "Admin",
+          phoneVerified: true,
+          approval: "APPROVED",
+          mfaVerified: true,
+          createdAt: "2026-11-01T00:00:00Z",
+        },
+      },
+      {
+        method: "GET",
+        path: "/seller/application",
+        body: { ...base, approval: "APPROVED", editable: false, missing: [] },
+      },
+    ]);
+    renderWithProviders(<SellerHome />);
+    expect(await screen.findByText(/viewing the seller portal as an admin/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Orders" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Add a product" })).not.toBeInTheDocument();
+  });
+});

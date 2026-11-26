@@ -427,7 +427,8 @@
       "orders": "Orders",
       "returns": "Returns",
       "programmes": "Creators and promoters",
-      "payouts": "Payouts"
+      "payouts": "Payouts",
+      "adminPreview": "You're viewing the seller portal as an admin. This is a preview with no store of its own, so lists are empty and changes are turned off. Switch back to Admin from the account menu."
     }
   },
   "admin": {

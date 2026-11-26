@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { useSession } from "@/lib/auth/session";
 import { useSellerApplication } from "@/lib/seller";
 import { Alert, buttonClass, Card } from "@/components/ui/Form";
 import { ApplicationStatus } from "./ApplicationStatus";
@@ -11,13 +12,16 @@ import { ApplicationStatus } from "./ApplicationStatus";
 export function SellerHome() {
   const t = useTranslations("seller.home");
   const app = useSellerApplication();
+  const session = useSession();
+  // An admin using "View as seller" sees an empty, read-only portal.
+  const preview = session.data?.state === "signed-in" && session.data.account.role === "ADMIN";
   if (app.isPending) return <p className="text-muted">{t("loading")}</p>;
   if (app.isError || !app.data) return <Alert>{t("loadError")}</Alert>;
   const a = app.data;
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">{a.storeName || t("title")}</h1>
-      <ApplicationStatus app={a} />
+      {preview ? <Alert tone="info">{t("adminPreview")}</Alert> : <ApplicationStatus app={a} />}
       {a.approval === "APPROVED" ? (
         <Card>
           <h2 className="text-lg font-semibold">{t("approvedTitle")}</h2>
@@ -38,9 +42,11 @@ export function SellerHome() {
             <Link href="/seller/products" className={buttonClass("secondary")}>
               {t("products")}
             </Link>
-            <Link href="/seller/products/new" className={buttonClass("secondary")}>
-              {t("addProduct")}
-            </Link>
+            {!preview && (
+              <Link href="/seller/products/new" className={buttonClass("secondary")}>
+                {t("addProduct")}
+              </Link>
+            )}
           </div>
         </Card>
       ) : (
