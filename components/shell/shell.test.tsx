@@ -27,4 +27,12 @@ describe("AppShell", () => {
     const nav = screen.getByRole("navigation", { name: "Main" });
     expect(nav.querySelector('a[href="/journey"]')).toHaveTextContent("Journey");
   });
+
+  it("keeps the theme switch in the navbar on phones too", () => {
+    renderWithProviders(<AppShell testMode>content</AppShell>);
+    const nav = screen.getByRole("navigation", { name: "Main" });
+    const toggle = [...nav.querySelectorAll("button")].find((b) => b.getAttribute("aria-label")?.startsWith("Theme"));
+    expect(toggle).toBeDefined();
+    expect(toggle!.className).not.toMatch(/(^|\s)hidden(\s|$)/);
+  });
 });
