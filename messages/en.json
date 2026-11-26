@@ -1673,6 +1673,15 @@
           "A browser smoke test of the real app after every milestone.",
           "A full end-to-end pass as buyer, seller and admin, plus a security test where one account tries to reach another account's orders, invoices and products."
         ]
+      },
+      {
+        "title": "Quality checks and going live (M6)",
+        "body": "Before handing it over, we tested the whole app the way a client would use it, then put it online for free.",
+        "points": [
+          "Browser journeys for every role, accessibility checks on about 20 pages and speed budgets, run every night in three browsers with a load test and a security scan.",
+          "Demo data in all 12 categories with a scheduled launch deal, and a tester guide for the client.",
+          "The web app on Netlify and the backend on an Oracle Cloud Always Free server, with HTTPS, nightly backups and deploys that roll back by themselves."
+        ]
       }
     ],
     "problemsTitle": "Problems we faced, and how we fixed them",
@@ -1725,6 +1734,18 @@
         "fix": "A test now checks that every piece of text the app uses actually exists."
       },
       {
+        "problem": "Oracle's larger free servers were out of capacity, and the backend was sized for 4 GB of memory.",
+        "fix": "A lite setup for the 1 GB free server: product photos on disk, one API copy, a smaller database cache and images built in the cloud. It uses about 315 MB under load."
+      },
+      {
+        "problem": "Render's free tier sleeps and deletes its database after 30 days, and Railway is not free.",
+        "fix": "Netlify for the web app and Oracle's always-free server for the backend, with a temporary tunnel from a laptop for the first demo."
+      },
+      {
+        "problem": "Load testing showed that every visitor's page was counted against one shared rate limit.",
+        "fix": "The web server sends a private key on its own requests, so only real visitors are limited."
+      },
+      {
         "problem": "Working within limited time and budget for development.",
         "fix": "A faster workflow with fewer, larger pull requests, while keeping every test, security scan and review step."
       }
@@ -1732,12 +1753,12 @@
     "statusTitle": "Where we are now",
     "status": [
       {
-        "label": "M0–M5",
-        "text": "Done: the whole marketplace works end to end on simulated payments, shipping and payouts."
+        "label": "M0–M6",
+        "text": "Built, tested and live: the web app on Netlify and the backend on Oracle Cloud's free tier, on simulated payments, shipping and payouts."
       },
       {
-        "label": "M6",
-        "text": "Next: go live on free hosting, run load, security and accessibility checks, and walk through every requirement with the client."
+        "label": "Next",
+        "text": "The client walks through every requirement (acceptance testing); open decisions such as commission are settled; automatic deploys to the server are switched on."
       }
     ],
     "cta": "Start shopping"

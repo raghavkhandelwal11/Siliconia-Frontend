@@ -19,6 +19,7 @@ const stageLook: [IconName, number][] = [
   ["store", 30],
   ["rocket", 290],
   ["check", 150],
+  ["bolt", 210],
 ];
 
 // /journey: how Siliconics was planned, built and tested, and what we fixed on the way.
