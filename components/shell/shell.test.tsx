@@ -35,4 +35,13 @@ describe("AppShell", () => {
     expect(toggle).toBeDefined();
     expect(toggle!.className).not.toMatch(/(^|\s)hidden(\s|$)/);
   });
+
+  it("can hide just the banner while staying in test mode", () => {
+    renderWithProviders(
+      <AppShell testMode hideBanner>
+        content
+      </AppShell>,
+    );
+    expect(screen.queryByText(/TEST MODE/)).toBeNull();
+  });
 });

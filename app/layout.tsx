@@ -38,7 +38,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body className={`${geistSans.variable} ${geistMono.variable} flex flex-col antialiased`}>
         <NextIntlClientProvider>
           <Providers>
-            <AppShell testMode={process.env.NEXT_PUBLIC_TEST_MODE !== "false"}>{children}</AppShell>
+            <AppShell
+              testMode={process.env.NEXT_PUBLIC_TEST_MODE !== "false"}
+              hideBanner={process.env.NEXT_PUBLIC_HIDE_TEST_BANNER === "true"}
+            >
+              {children}
+            </AppShell>
           </Providers>
         </NextIntlClientProvider>
       </body>
