@@ -63,7 +63,7 @@ export function SellerOrderDetail({ id }: { id: string }) {
           </Card>
           <Card>
             <h2 className="mb-3 font-semibold">{ts("history")}</h2>
-            <Timeline events={o.events} />
+            <Timeline events={o.events} viewer="seller" />
           </Card>
         </div>
 
