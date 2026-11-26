@@ -1,5 +1,5 @@
 import type { components } from "@/lib/api/schema";
-import { apiBaseUrl } from "@/lib/api/client";
+import { apiBaseUrl, serverHeaders } from "@/lib/api/client";
 
 export type SearchResult = components["schemas"]["SearchResult"];
 export type ProductCardData = components["schemas"]["ProductCard"];
@@ -35,7 +35,10 @@ export function listingParams(raw: RawParams, extra: Record<string, string> = {}
 /** Server-side listing fetch, cached for 30 seconds like the API response. */
 export async function fetchListing(params: URLSearchParams): Promise<SearchResult | "not-found" | null> {
   try {
-    const res = await fetch(`${apiBaseUrl()}/products?${params}`, { next: { revalidate: 30 } });
+    const res = await fetch(`${apiBaseUrl()}/products?${params}`, {
+      headers: serverHeaders(),
+      next: { revalidate: 30 },
+    });
     if (res.status === 404) return "not-found";
     if (!res.ok) return null;
     return (await res.json()) as SearchResult;

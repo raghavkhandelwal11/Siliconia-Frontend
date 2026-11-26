@@ -15,6 +15,16 @@ export function apiBaseUrl(): string {
   return `${window.location.origin}/api/v1`;
 }
 
+/**
+ * Headers for the web server's own API calls while rendering pages. The key
+ * lets those calls skip the per-visitor rate limit (every visitor's page is
+ * rendered from one address). Server-only: INTERNAL_API_KEY never reaches the browser.
+ */
+export function serverHeaders(): Record<string, string> {
+  const key = typeof window === "undefined" ? process.env.INTERNAL_API_KEY : undefined;
+  return key ? { "X-Siliconics-Internal": key } : {};
+}
+
 const CSRF_COOKIE = "sx_csrf";
 const CSRF_HEADER = "X-CSRF-Token";
 const SAFE = new Set(["GET", "HEAD", "OPTIONS"]);

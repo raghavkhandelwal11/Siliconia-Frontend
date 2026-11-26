@@ -1,5 +1,5 @@
 import type { components } from "@/lib/api/schema";
-import { apiBaseUrl } from "@/lib/api/client";
+import { apiBaseUrl, serverHeaders } from "@/lib/api/client";
 
 export type ProductPage = components["schemas"]["ProductPage"];
 export type ProductLive = components["schemas"]["ProductLive"];
@@ -9,6 +9,7 @@ export type ProductCardData = components["schemas"]["ProductCard"];
 export async function fetchProduct(slug: string): Promise<ProductPage | "not-found" | null> {
   try {
     const res = await fetch(`${apiBaseUrl()}/products/${encodeURIComponent(slug)}`, {
+      headers: serverHeaders(),
       next: { revalidate: 60, tags: [`product:${slug}`] },
     });
     if (res.status === 404) return "not-found";
@@ -21,7 +22,10 @@ export async function fetchProduct(slug: string): Promise<ProductPage | "not-fou
 
 export async function fetchSimilar(id: string): Promise<ProductCardData[]> {
   try {
-    const res = await fetch(`${apiBaseUrl()}/products/${id}/similar`, { next: { revalidate: 300 } });
+    const res = await fetch(`${apiBaseUrl()}/products/${id}/similar`, {
+      headers: serverHeaders(),
+      next: { revalidate: 300 },
+    });
     return res.ok ? ((await res.json()) as { items: ProductCardData[] }).items : [];
   } catch {
     return [];
