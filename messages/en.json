@@ -41,7 +41,8 @@
       "dark": "dark"
     },
     "cartCount": "Cart, {n, plural, one {# item} other {# items}}",
-    "notificationsCount": "Notifications, {n} unread"
+    "notificationsCount": "Notifications, {n} unread",
+    "journey": "Journey"
   },
   "home": {
     "apiStatus": "API status",
@@ -1600,5 +1601,145 @@
     "body": "The link may be old or mistyped.",
     "home": "Go to the home page",
     "browse": "Browse categories"
+  },
+  "journey": {
+    "eyebrow": "How Siliconics was built",
+    "title": "Our journey",
+    "intro": "From three client documents to a working marketplace for buyers, sellers, creators, promoters and admins: how we worked, step by step, and what went wrong along the way.",
+    "stagesTitle": "From idea to working app",
+    "stages": [
+      {
+        "title": "Gathering requirements",
+        "body": "We started from the client's three documents: the Problem Statement, the Functional Requirements Checklist and the Non-Functional Requirements.",
+        "points": [
+          "Read every requirement and grouped it by role: Buyer, Seller, Creator, Promoter and Admin.",
+          "Named the core ideas: Electra membership (₹650 a year) and Electrons, the rewards currency (1 Electron = ₹1).",
+          "Wrote a Business Requirements Document in plain business language, with an ID for every requirement."
+        ]
+      },
+      {
+        "title": "Filling in the gaps",
+        "body": "The documents left real questions open, so we wrote them down instead of guessing.",
+        "points": [
+          "Recorded 19 client decisions, such as one role per account, phone OTP sign-in and launch deals that keep at least 4% profit.",
+          "Kept a list of open questions (commission, reward pool sizes, promoter rewards, GST on launch stock, hosting) with the interim answer we use until the client decides.",
+          "Listed our assumptions so the client could confirm or correct them."
+        ]
+      },
+      {
+        "title": "Documentation",
+        "body": "Before writing code we described how the system should work.",
+        "points": [
+          "Technical requirements with measurable targets for speed, security and availability.",
+          "A low-level design: data model, APIs, money flows, the Electrons ledger and launch-day queueing.",
+          "Page flows, a UI feature catalogue and a design system for every screen.",
+          "One API contract (OpenAPI) that the web app's client code is generated from, so both sides always agree."
+        ]
+      },
+      {
+        "title": "Making the workflow",
+        "body": "We set rules that keep quality high and costs at zero.",
+        "points": [
+          "Free services only for the prototype: payments, shipping, bank payouts, KYC and SMS run on built-in simulators, and paid providers are prepared behind adapters for later.",
+          "Every change goes through a pull request with automated checks: lint, unit and integration tests, contract checks, security scans and a build.",
+          "Nothing merges unless every check is green, and secrets never enter git."
+        ]
+      },
+      {
+        "title": "Dividing the work",
+        "body": "We split the build into milestones, each with clear tasks and a definition of done.",
+        "points": [
+          "Seven milestones, M0 to M6, from foundations to go-live.",
+          "Every task became a GitHub issue with labels for area, module, priority and size.",
+          "Later we sped up to one backend and one frontend pull request per milestone, without dropping tests or security checks."
+        ]
+      },
+      {
+        "title": "Building the app",
+        "body": "Milestone by milestone, the marketplace came together on Go, PostgreSQL and Redis behind a Next.js web app.",
+        "points": [
+          "M0–M1: foundations, phone sign-in, seller onboarding with KYC, the catalogue, search and product pages.",
+          "M2: cart, checkout, online and cash-on-delivery payments, shipping, orders, returns, support issues and notifications.",
+          "M3: Electra membership, the Electrons ledger and launch-day deals with a fair waiting room.",
+          "M4: reviews, creators and demo units, promoters, reward pools and cash-outs.",
+          "M5: the admin console, weekly seller payouts, configuration, health monitoring and reconciliation."
+        ]
+      },
+      {
+        "title": "Testing everything",
+        "body": "Each milestone was tested before it moved on, and the whole app once more at the end.",
+        "points": [
+          "Integration tests on what matters most: money, stock and concurrency. 5,000 buyers racing for 50 launch units sell exactly 50.",
+          "A browser smoke test of the real app after every milestone.",
+          "A full end-to-end pass as buyer, seller and admin, plus a security test where one account tries to reach another account's orders, invoices and products."
+        ]
+      }
+    ],
+    "problemsTitle": "Problems we faced, and how we fixed them",
+    "problemsIntro": "Every one of these was found by a test or by using the app, fixed, and then covered by a test so it cannot come back.",
+    "problemLabel": "Problem",
+    "fixLabel": "Fix",
+    "problems": [
+      {
+        "problem": "Courier tracking updates sometimes arrived out of order, so an order could look shipped after it was delivered.",
+        "fix": "The shipping simulator sends one update at a time per parcel, and the app ignores any update older than the one it already has."
+      },
+      {
+        "problem": "A payment webhook could arrive before we had saved the gateway's reference, leaving a refund stuck in processing.",
+        "fix": "The app now tells the gateway it does not know the payment yet, so the gateway retries a moment later."
+      },
+      {
+        "problem": "On launch day, thousands of buyers could reach for the same few units at once.",
+        "fix": "A fast gate in Redis plus a guarded database update means units can never be oversold, proven by a 5,000-buyer test."
+      },
+      {
+        "problem": "Launch-deal stock leaked into normal sales, so it appeared in the cart and search at the regular price.",
+        "fix": "Cart, search and product pages count only the seller's regular stock."
+      },
+      {
+        "problem": "Prices with paise were rounded, so ₹219.80 showed as ₹220.",
+        "fix": "Money is shown exactly, with paise whenever there are any."
+      },
+      {
+        "problem": "When a creator's bank transfer failed, their Electrons were lost.",
+        "fix": "Failed or cancelled cash-outs return exactly the Electrons taken, and a daily check confirms every balance matches its ledger."
+      },
+      {
+        "problem": "Searching for \"power bank\" or \"tv\" found nothing unless the word was in the product name.",
+        "fix": "Search now also matches category names."
+      },
+      {
+        "problem": "After signing out, signing in again failed every time with \"Refresh the page and try again\".",
+        "fix": "Signing out now replaces the security token instead of deleting it, and any page load issues a new one."
+      },
+      {
+        "problem": "Admins using \"View as Seller\" saw only an error.",
+        "fix": "Admins now see a read-only preview of the seller portal, and all changes stay blocked."
+      },
+      {
+        "problem": "Web pages could be embedded inside other sites, a clickjacking risk.",
+        "fix": "Every page now sends strict security headers, including a content security policy."
+      },
+      {
+        "problem": "A missing piece of text broke two headings on the home page.",
+        "fix": "A test now checks that every piece of text the app uses actually exists."
+      },
+      {
+        "problem": "Working within limited time and budget for development.",
+        "fix": "A faster workflow with fewer, larger pull requests, while keeping every test, security scan and review step."
+      }
+    ],
+    "statusTitle": "Where we are now",
+    "status": [
+      {
+        "label": "M0–M5",
+        "text": "Done: the whole marketplace works end to end on simulated payments, shipping and payouts."
+      },
+      {
+        "label": "M6",
+        "text": "Next: go live on free hosting, run load, security and accessibility checks, and walk through every requirement with the client."
+      }
+    ],
+    "cta": "Start shopping"
   }
 }
