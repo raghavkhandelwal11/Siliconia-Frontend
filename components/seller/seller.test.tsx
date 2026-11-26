@@ -160,7 +160,11 @@ describe("SellerHome as an admin preview", () => {
           createdAt: "2026-11-01T00:00:00Z",
         },
       },
-      { method: "GET", path: "/seller/application", body: { ...base, approval: "APPROVED", editable: false, missing: [] } },
+      {
+        method: "GET",
+        path: "/seller/application",
+        body: { ...base, approval: "APPROVED", editable: false, missing: [] },
+      },
     ]);
     renderWithProviders(<SellerHome />);
     expect(await screen.findByText(/viewing the seller portal as an admin/)).toBeInTheDocument();
