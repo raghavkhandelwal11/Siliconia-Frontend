@@ -9,6 +9,7 @@
 [build.environment]
   NODE_VERSION = "26"
   NEXT_TELEMETRY_DISABLED = "1"
-  # TEMPORARY for the client demo: hides the TEST MODE banner on Netlify only
-  # (the sign-in page still links to the test inbox). Set back to "true" after.
-  NEXT_PUBLIC_TEST_MODE = "false"
+  NEXT_PUBLIC_TEST_MODE = "true"
+  # TEMPORARY for the client demo: hides only the TEST MODE banner. Sign-in
+  # still links to the test inbox. Remove this line after the demo.
+  NEXT_PUBLIC_HIDE_TEST_BANNER = "true"
