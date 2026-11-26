@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { expectAccessible, inStockSlug } from "./helpers";
+import { addToCart, expectAccessible, inStockSlug } from "./helpers";
 
 // A visitor browses, searches, opens a product and fills a cart without signing in.
 test("guest browses, searches and fills a cart", async ({ page }) => {
@@ -14,7 +14,7 @@ test("guest browses, searches and fills a cart", async ({ page }) => {
   await page.goto(`/p/${await inStockSlug(page.request)}`);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expectAccessible(page, "product page");
-  await page.getByRole("button", { name: "Add to cart" }).click();
+  await addToCart(page);
 
   await page.goto("/cart");
   await expect(page.getByRole("link", { name: "Proceed to checkout" })).toBeVisible();

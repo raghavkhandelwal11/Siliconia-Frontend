@@ -100,3 +100,12 @@ export async function inStockSlug(request: APIRequestContext): Promise<string> {
   expect(items.length, "no product in stock: run `make demo` in the backend").toBeGreaterThan(0);
   return items[0].slug;
 }
+
+/** Clicks "Add to cart" and waits until the cart has saved the item. */
+export async function addToCart(page: Page) {
+  const saved = page.waitForResponse(
+    (r) => r.url().includes("/cart/items/") && r.request().method() === "PUT" && r.ok(),
+  );
+  await page.getByRole("button", { name: "Add to cart" }).click();
+  await saved;
+}

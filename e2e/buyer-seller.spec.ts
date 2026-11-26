@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { acceptTerms, api, expectAccessible, inStockSlug, newPhone, signIn } from "./helpers";
+import { acceptTerms, addToCart, api, expectAccessible, inStockSlug, newPhone, signIn } from "./helpers";
 
 // One order from checkout to shipment: a new buyer pays online and the demo
 // seller packs and ships it.
@@ -19,7 +19,7 @@ test.describe.serial("buyer and seller", () => {
     });
 
     await page.goto(`/p/${await inStockSlug(page.request)}`);
-    await page.getByRole("button", { name: "Add to cart" }).click();
+    await addToCart(page);
     await page.goto("/cart");
     await page.getByRole("link", { name: "Proceed to checkout" }).click();
     await expect(page.getByRole("heading", { name: "Checkout" })).toBeVisible();
