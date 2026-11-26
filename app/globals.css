@@ -31,9 +31,9 @@
   --glow-2: rgb(8 145 178 / 0.2);
   --glow-3: rgb(245 165 36 / 0.16);
 
-  --color-status-success: #00855f;
+  --color-status-success: #00704f; /* ≥4.5:1 as text on white and on its 15% tint (WCAG AA) */
   --color-status-info: #0072b2;
-  --color-status-warning: #b77a00;
+  --color-status-warning: #8a5c00; /* ≥4.5:1 as text on white */
   --color-status-danger: #c2410c;
   --color-status-neutral: #6b7280;
   --color-test: #b3261e;

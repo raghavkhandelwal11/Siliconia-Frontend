@@ -32,7 +32,7 @@ export function ProductCard({ p, index = 0 }: { p: ProductCardData; index?: numb
         )}
         <div className="absolute left-2 top-2 flex flex-col items-start gap-1">
           {p.discountPct >= 5 && (
-            <span className="rounded-full bg-success px-2 py-0.5 text-xs font-bold text-white shadow-card">
+            <span className="rounded-full bg-[#006b4b] px-2 py-0.5 text-xs font-bold text-white shadow-card">
               −{p.discountPct}%
             </span>
           )}

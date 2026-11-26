@@ -1,5 +1,5 @@
 import type { components } from "@/lib/api/schema";
-import { apiBaseUrl } from "@/lib/api/client";
+import { apiBaseUrl, serverHeaders } from "@/lib/api/client";
 
 export type CategoryNode = components["schemas"]["CategoryNode"];
 export type CategoryDetail = components["schemas"]["CategoryDetail"];
@@ -12,7 +12,10 @@ const REVALIDATE = 300;
 
 export async function fetchCategoryTree(): Promise<CategoryNode[] | null> {
   try {
-    const res = await fetch(`${apiBaseUrl()}/categories`, { next: { revalidate: REVALIDATE } });
+    const res = await fetch(`${apiBaseUrl()}/categories`, {
+      headers: serverHeaders(),
+      next: { revalidate: REVALIDATE },
+    });
     if (!res.ok) return null;
     return ((await res.json()) as { categories: CategoryNode[] }).categories;
   } catch {
@@ -23,6 +26,7 @@ export async function fetchCategoryTree(): Promise<CategoryNode[] | null> {
 export async function fetchCategory(slug: string): Promise<CategoryDetail | "not-found" | null> {
   try {
     const res = await fetch(`${apiBaseUrl()}/categories/${encodeURIComponent(slug)}`, {
+      headers: serverHeaders(),
       next: { revalidate: REVALIDATE },
     });
     if (res.status === 404) return "not-found";

@@ -1,0 +1,101 @@
+# Nightly checks (T6.2): every role's journey in Chromium, Firefox and WebKit
+# with accessibility checks, performance budgets, a k6 load test and an OWASP
+# ZAP baseline scan, each against the whole prototype brought up from both repos.
+name: nightly
+
+on:
+  schedule:
+    - cron: "30 20 * * *" # 02:00 IST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+jobs:
+  journeys:
+    name: journeys (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: raghavkhandelwal11/Siliconia_Backend
+          path: backend
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: scripts/ci-stack.sh
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Journeys and accessibility
+        run: npx playwright test --project=${{ matrix.browser }} ${{ matrix.browser == 'chromium' && '--project=mobile' || '' }}
+        env:
+          E2E_ALL_BROWSERS: "1"
+          E2E_ADMIN_PHONE: "9999900002"
+          TEST_INBOX_PASSWORD: change-me-tester
+      - name: Performance budgets
+        if: matrix.browser == 'chromium'
+        run: npx playwright test e2e/performance.spec.ts --project=chromium
+        env:
+          E2E_PERF: "1"
+      - if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-${{ matrix.browser }}
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7
+
+  load:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: raghavkhandelwal11/Siliconia_Backend
+          path: backend
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: scripts/ci-stack.sh
+      - name: k6 load test (50 shoppers)
+        run: docker run --rm --network host -v "$PWD/load:/load" grafana/k6:1.3.0 run /load/browse.k6.js
+
+  security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: raghavkhandelwal11/Siliconia_Backend
+          path: backend
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: scripts/ci-stack.sh
+      - name: OWASP ZAP baseline
+        run: |
+          mkdir -p zap && chmod 777 zap
+          cp .zap/rules.tsv zap/
+          docker run --rm --network host -v "$PWD/zap:/zap/wrk:rw" ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py -t http://localhost:8080 -c rules.tsv -r report.html -I # fail on FAIL rules; warnings go to the report
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: zap-report
+          path: zap/report.html
+          retention-days: 14

@@ -142,7 +142,13 @@ function Line({ line: l, busy, onQty }: { line: CartLine; busy: boolean; onQty: 
   const diff = l.pricePaise - l.priceAtAddPaise;
   return (
     <li className="flex gap-4 p-4 sm:p-5">
-      <Link href={`/p/${l.slug}`} className="block size-20 shrink-0 overflow-hidden rounded-xl bg-bg sm:size-24">
+      {/* The product name beside it is the accessible link; this picture is a mouse shortcut only. */}
+      <Link
+        href={`/p/${l.slug}`}
+        tabIndex={-1}
+        aria-hidden
+        className="block size-20 shrink-0 overflow-hidden rounded-xl bg-bg sm:size-24"
+      >
         {l.coverUrl && (
           // eslint-disable-next-line @next/next/no-img-element -- sized by the API
           <img
