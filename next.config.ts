@@ -35,7 +35,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // The Docker image runs the standalone server; Netlify (NETLIFY=true while
+  // building) uses its own Next.js runtime instead.
+  output: process.env.NETLIFY ? undefined : "standalone",
   poweredByHeader: false,
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
