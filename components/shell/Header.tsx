@@ -22,6 +22,12 @@ export function Header() {
         <CategoryMenu />
         <SearchBox />
         <nav aria-label={t("shell.mainNav")} className="flex items-center gap-0.5">
+          <Link
+            href="/journey"
+            className="rounded-full px-2.5 py-1.5 text-xs font-semibold text-muted transition hover:bg-bg hover:text-ink sm:text-sm"
+          >
+            {t("shell.journey")}
+          </Link>
           <ThemeToggle className="hidden md:inline-flex" />
           <Link
             href="/account/wishlist"

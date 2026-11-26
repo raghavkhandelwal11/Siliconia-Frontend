@@ -21,4 +21,10 @@ describe("AppShell", () => {
     expect(screen.getByRole("combobox", { name: "Search products" })).toBeInTheDocument();
     expect(screen.getByRole("main")).toHaveTextContent("content");
   });
+
+  it("links to the Journey page from the navbar", () => {
+    renderWithProviders(<AppShell testMode>content</AppShell>);
+    const nav = screen.getByRole("navigation", { name: "Main" });
+    expect(nav.querySelector('a[href="/journey"]')).toHaveTextContent("Journey");
+  });
 });
