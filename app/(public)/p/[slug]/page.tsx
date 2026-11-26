@@ -145,13 +145,6 @@ export default async function Page({ params }: Props) {
         </section>
       </div>
 
-      <section className="card p-6 text-center" aria-labelledby="reviews">
-        <h2 id="reviews" className="text-lg font-semibold">
-          {t("reviewsTitle")}
-        </h2>
-        <p className="mt-1 text-muted">{t("reviewsSoon")}</p>
-      </section>
-
       <ProductCommunity productId={p.id} />
       <ProductRail title={t("similar")} items={similar} href={`/c/${p.category.slug}`} />
     </article>

@@ -143,7 +143,9 @@
       "localEyebrow": "Made in India",
       "local": "Local picks",
       "newEyebrow": "Just in",
-      "new": "New arrivals"
+      "new": "New arrivals",
+      "week": "Products of the week",
+      "forYou": "Picked for you"
     }
   },
   "status": {
@@ -679,7 +681,6 @@
     "about": "About this product",
     "specsTitle": "Specifications",
     "reviewsTitle": "Reviews",
-    "reviewsSoon": "Creator and buyer reviews open with the reviews release. Be the first to review after you buy.",
     "similar": "Similar products",
     "notFoundTitle": "This product is not available",
     "notFoundBody": "It may have been paused by the seller or removed.",
@@ -978,7 +979,14 @@
     "free": "Free",
     "replacement": "Replacement",
     "helpPrompt": "Something not right with this order?",
-    "getHelp": "Get help"
+    "getHelp": "Get help",
+    "sellerActor": {
+      "BUYER": "Buyer",
+      "SELLER": "You",
+      "ADMIN": "Siliconics",
+      "COURIER": "Courier",
+      "SYSTEM": "Siliconics"
+    }
   },
   "shipping": {
     "pinLabel": "PIN code for delivery",
@@ -1422,7 +1430,8 @@
     "period": "Month (YYYY-MM)",
     "poolSize": "Pool (Electrons)",
     "setPool": "Set pool",
-    "settled": "settled"
+    "settled": "settled",
+    "reviewsHeading": "Reviews"
   },
   "m5": {
     "empty": "Nothing here yet.",
@@ -1457,7 +1466,8 @@
       "status": "Status",
       "suspend": "Suspend",
       "reactivate": "Reactivate",
-      "failed": "Couldn't change this account."
+      "failed": "Couldn't change this account.",
+      "id": "Account ID"
     },
     "orders": {
       "title": "Orders and returns",
@@ -1522,7 +1532,7 @@
         "audit": "Audit log"
       },
       "adjustments": "Electrons adjustments",
-      "adjustmentsHelp": "A different admin must apply each request. Use a negative amount to remove Electrons.",
+      "adjustmentsHelp": "A different admin must apply each request. Copy the account ID from Users. Use a negative amount to remove Electrons.",
       "account": "Account ID",
       "amount": "Electrons",
       "reason": "Reason",
@@ -1583,5 +1593,11 @@
       "missing": "This document isn't available.",
       "versionDate": "Version {version}, published {date}"
     }
+  },
+  "notFound": {
+    "title": "We couldn't find that page",
+    "body": "The link may be old or mistyped.",
+    "home": "Go to the home page",
+    "browse": "Browse categories"
   }
 }

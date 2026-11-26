@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { renderWithProviders } from "@/test/render";
 import { stubApi } from "@/test/fetch";
-import { AdminAudit, AdminPayouts } from "./Admin";
+import { AdminAudit, AdminPayouts, AdminUsers } from "./Admin";
 import { SellerPayouts } from "./Seller";
 
 describe("AdminPayouts", () => {
@@ -78,5 +78,20 @@ describe("SellerPayouts", () => {
     expect(await screen.findByText("₹919")).toBeInTheDocument();
     expect(screen.getByText(/Invalid account/)).toBeInTheDocument();
     expect(screen.getByText("Sales ₹1,000 − commission ₹80 − TDS ₹1")).toBeInTheDocument();
+  });
+});
+
+describe("AdminUsers", () => {
+  it("shows phone and account ID from the API fields", async () => {
+    stubApi([
+      {
+        method: "GET",
+        path: "/admin/accounts",
+        body: { items: [{ id: "acc-1", role: "BUYER", name: "Ravi", phoneE164: "+919876500001", status: "ACTIVE" }] },
+      },
+    ]);
+    renderWithProviders(<AdminUsers />);
+    expect(await screen.findByText("+919876500001")).toBeInTheDocument();
+    expect(screen.getByText("acc-1")).toBeInTheDocument();
   });
 });

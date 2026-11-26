@@ -47,6 +47,7 @@ export function ReturnForm({ orderId, itemId, windowEnds }: { orderId: string; i
             <input
               type="radio"
               name={`type-${itemId}`}
+              value={v}
               className="accent-[var(--color-brand)]"
               checked={type === v}
               onChange={() => setType(v)}

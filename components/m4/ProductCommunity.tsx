@@ -17,7 +17,10 @@ export function ProductCommunity({ productId }: { productId: string }) {
   const promoters = usePromoters(productId);
   return (
     <div className="space-y-8">
-      <section className="card space-y-4 p-5">
+      <section className="card space-y-4 p-5" aria-labelledby="reviews">
+        <h2 id="reviews" className="text-lg font-semibold">
+          {t("reviewsHeading")}
+        </h2>
         <div role="tablist" aria-label={t("reviewsTabs")} className="flex gap-2 overflow-x-auto">
           {(["buyers", "creators", "promoters"] as const).map((k) => (
             <button

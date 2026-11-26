@@ -127,11 +127,14 @@ export function AdminUsers() {
       {act.isError && <Alert>{errText(act.error, t("failed"))}</Alert>}
       <Card>
         <Table
-          head={[t("name"), t("role"), t("phone"), t("status"), ""]}
+          head={[t("name"), t("role"), t("phone"), t("id"), t("status"), ""]}
           rows={(rows.data ?? []).map((a) => [
             str(a.name) || "—",
             str(a.role),
-            str(a.phone),
+            str(a.phoneE164),
+            <code key="id" className="select-all text-xs">
+              {str(a.id)}
+            </code>,
             <StatusChip key="s" tone={tone(str(a.status))}>
               {str(a.status)}
             </StatusChip>,
