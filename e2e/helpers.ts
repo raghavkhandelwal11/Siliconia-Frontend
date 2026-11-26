@@ -14,8 +14,11 @@ export function newPhone(): string {
 
 type Message = { id: string; to: string; body: string };
 
+// E2E_INBOX_URL reads codes straight from the backend when the site under test
+// only forwards the inbox page (Netlify, or the lite server's web app).
 async function inbox(request: APIRequestContext): Promise<Message[]> {
-  const res = await request.get("/test-inbox/api/messages", { headers: { Authorization: inboxAuth() } });
+  const base = process.env.E2E_INBOX_URL ?? "";
+  const res = await request.get(`${base}/test-inbox/api/messages`, { headers: { Authorization: inboxAuth() } });
   return ((await res.json()) as { messages: Message[] }).messages;
 }
 
