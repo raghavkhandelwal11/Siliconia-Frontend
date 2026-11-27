@@ -1761,6 +1761,25 @@
         "text": "The client walks through every requirement (acceptance testing); open decisions such as commission are settled; automatic deploys to the server are switched on."
       }
     ],
-    "cta": "Start shopping"
+    "cta": "Start shopping",
+    "codeTitle": "Source code",
+    "codeIntro": "Everything is open on GitHub.",
+    "repos": [
+      {
+        "name": "Frontend",
+        "desc": "Next.js web app",
+        "url": "https://github.com/raghavkhandelwal11/Siliconia-Frontend"
+      },
+      {
+        "name": "Backend",
+        "desc": "Go API, worker and simulators",
+        "url": "https://github.com/raghavkhandelwal11/Siliconia_Backend"
+      },
+      {
+        "name": "Docs",
+        "desc": "Requirements, design and plans",
+        "url": "https://github.com/raghavkhandelwal11/Siliconia"
+      }
+    ]
   }
 }
