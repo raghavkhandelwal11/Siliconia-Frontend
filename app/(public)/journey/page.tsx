@@ -9,6 +9,7 @@ export const metadata: Metadata = { title: "Our journey" };
 type Stage = { title: string; body: string; points: string[] };
 type Problem = { problem: string; fix: string };
 type Status = { label: string; text: string };
+type Repo = { name: string; desc: string; url: string };
 
 // One icon and hue per stage, in order.
 const stageLook: [IconName, number][] = [
@@ -28,6 +29,7 @@ export default async function JourneyPage() {
   const stages = t.raw("stages") as Stage[];
   const problems = t.raw("problems") as Problem[];
   const status = t.raw("status") as Status[];
+  const repos = t.raw("repos") as Repo[];
   return (
     <article className="space-y-14">
       <header className="rise max-w-3xl">
@@ -97,6 +99,29 @@ export default async function JourneyPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section aria-labelledby="code">
+        <h2 id="code" className="text-2xl font-bold">
+          {t("codeTitle")}
+        </h2>
+        <p className="mt-1 text-muted">{t("codeIntro")}</p>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+          {repos.map((r) => (
+            <li key={r.url}>
+              <a href={r.url} target="_blank" rel="noreferrer" className="card card-hover block h-full p-4">
+                <span className="flex items-center gap-2 font-semibold">
+                  <Icon name="grid" size={18} />
+                  {r.name}
+                </span>
+                <span className="mt-1 block text-sm text-muted">{r.desc}</span>
+                <span className="mt-2 block break-all text-xs text-accent underline">
+                  {r.url.replace("https://", "")}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section aria-labelledby="status" className="card p-6">
